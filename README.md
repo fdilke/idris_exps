@@ -4,8 +4,7 @@
 
 - Create a repo
 - Install Atom
-- Install Idris (cabal update, cabal install idris. Takes ages) To /Users/Felix/Library/Haskell/bin
-- Install plugin. Have to tell it location of executable
+- Install Idris
 
 # To Do
 
