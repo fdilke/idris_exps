@@ -4,3 +4,7 @@ sourcedir = src
 
 modules = Lib
 	, MoreStuff.OtherLib
+	, AltTest.Tests
+
+tests = AltTest.Tests.testDouble
+	, AltTest.Tests.testTriple

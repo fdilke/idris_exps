@@ -16,6 +16,10 @@
 
 Ctl-Alt-R compile/check current file. Gives quite helpful messages in a nice font
 
+# Helpful Idris stuff
+
+A [tutorial](https://eb.host.cs.st-andrews.ac.uk/writings/idris-tutorial.pdf)
+
 # Notes on book
 
 3 Type driven development. Loop is: Type, define, refine!

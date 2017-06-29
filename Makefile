@@ -12,6 +12,9 @@ test: install
 	@echo "Created test executable file run-tests"
 	./run-tests
 
+alt-test:
+	idris --testpkg build.ipkg
+
 clean:
 	idris --clean build.ipkg
 	rm -f run run-tests Main.ibc
@@ -19,4 +22,4 @@ clean:
 	find . -name *.o -delete
 	find . -name *.ibc -delete
 
-.PHONY: app test clean
+.PHONY: app test alt-test clean
