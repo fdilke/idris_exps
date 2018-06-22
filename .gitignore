@@ -1,0 +1,11 @@
+# IDEA
+./*.iml
+
+# Idris binary files
+*.ibc
+
+# Output binaries
+./run
+./run-tests
+
+
