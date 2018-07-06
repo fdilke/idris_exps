@@ -128,3 +128,7 @@ Anonymous functions using lambda: can have multiple arguments, with types:
                 if (len1 > len2) then len1 else len2
     
 Note have to get the indentation right.
+
+Invoke the REPL as `idris -p contrib` ; you'll then have the `contrib` package available.
+Also put `opts = "-p contrib"` in an .ipkg file to include packages.
+
