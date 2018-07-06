@@ -130,6 +130,7 @@ Anonymous functions using lambda: can have multiple arguments, with types:
 Note have to get the indentation right.
 
 Invoke the REPL as `idris -p contrib` ; you'll then have the `contrib` package available.
-Also put `opts = "-p contrib"` in an .ipkg file to include packages.
+Also put `opts = "-p contrib specdris"` in an .ipkg file to include packages.
 In REPL can import with: e.g. `:module Test.Unit.Assertions`
+Can define nice spec-style tests with Specdris - later: understand how this library works
 

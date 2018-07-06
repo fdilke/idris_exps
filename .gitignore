@@ -4,6 +4,9 @@
 # Idris binary files
 *.ibc
 
+# Binary targets
+src/target
+
 # Output binaries
 run
 run-tests

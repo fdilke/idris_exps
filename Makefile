@@ -2,15 +2,16 @@
 #
 #
 
-idris ?= idris
-pkg   := IdrisExps
+idris   ?= idris
+pkg     := IdrisExps
+target  := ./target
 
 .PHONY: build clean clobber install rebuild test
 
 all: test
 
 build:
-	@ ${idris} --build ${pkg}.ipkg
+	@ ${idris} --ibcsubdir ${target} --build ${pkg}.ipkg
 
 clean:
 	@ ${idris} --clean ${pkg}.ipkg
@@ -19,12 +20,12 @@ clobber: clean
 	@ find . -name '*.ibc' -delete
 
 install:
-	@ ${idris} --install ${pkg}.ipkg
+	@ ${idris} --ibcsubdir ${target} --install ${pkg}.ipkg
 
 rebuild: clean build
 
 test:
-	@ ${idris} --testpkg ${pkg}.ipkg
+	@ ${idris} --ibcsubdir ${target} --testpkg ${pkg}.ipkg
 
 
 #   all: install test app
