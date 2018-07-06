@@ -4,14 +4,9 @@ sourcedir = src
 
 modules = Lib
 	, MoreStuff.OtherLib
-	, AltTest.Tests
 	, SpecTests.SpecTests
 	, SpecTests.CollatzTests
 
-tests = AltTest.Tests.testDouble,
-    AltTest.Tests.testTriple,
-    SpecTests.SpecTests.specTests,
-    SpecTests.CollatzTests.collatzTests
-
+tests = SpecTests.SpecTests.specTests
 
 opts = "-p specdris"
