@@ -12,5 +12,5 @@ collatzTests = spec $ do
       (collatz_iterate 2) `shouldBe` 1
       (collatz_iterate 3) `shouldBe` 10
     it "counts how many are required" $ do
-      (collatz_iterations 1 0) `shouldBe` 0
-      (collatz_iterations 3 0) `shouldBe` 7
+      (collatz_iterations 1) `shouldBe` 0
+      (collatz_iterations 3) `shouldBe` 7
