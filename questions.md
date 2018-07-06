@@ -13,5 +13,7 @@ What happens at run time?
 
 How are functions declared infix, e.g. +, -, <?
 How can you tell what types e.g. 3 can be cast to?
-`
+
 How do you process files in Idris?
+
+Can I have a better test framework with meaningful messages? Try doing own one.

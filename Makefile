@@ -1,25 +1,54 @@
-all: install test app
+# a more standard makefile.
+#
+#
 
-install:
-	idris --install build.ipkg
+idris ?= idris
+pkg   := IdrisExps
 
-app:
-	idris -i src -p contrib Main.idr -o run
-	@echo "Created executable file run"
+.PHONY: build clean clobber install rebuild test
 
-test: install
-	idris -i src -p contrib test/test.idr -o run-tests
-	@echo "Created test executable file run-tests"
-	./run-tests
+all: test
 
-alt-test:
-	idris --testpkg build.ipkg
+build:
+	@ ${idris} --build ${pkg}.ipkg
 
 clean:
-	idris --clean build.ipkg
-	rm -f run run-tests Main.ibc
-	find . -name *~ -delete
-	find . -name *.o -delete
-	find . -name *.ibc -delete
+	@ ${idris} --clean ${pkg}.ipkg
 
-.PHONY: app test alt-test clean
+clobber: clean
+	@ find . -name '*.ibc' -delete
+
+install:
+	@ ${idris} --install ${pkg}.ipkg
+
+rebuild: clean build
+
+test:
+	@ ${idris} --testpkg ${pkg}.ipkg
+
+
+#   all: install test app
+#
+#   install:
+#   	idris --install build.ipkg
+#
+#   app:
+#   	idris -i src -p contrib Main.idr -o run
+#   	@echo "Created executable file run"
+#
+#   test: install
+#   	idris -i src -p contrib test/test.idr -o run-tests
+#   	@echo "Created test executable file run-tests"
+#   	./run-tests
+#
+#   alt-test:
+#   	idris --testpkg build.ipkg
+#
+#   clean:
+#   	idris --clean build.ipkg
+#   	rm -f run run-tests Main.ibc
+#   	find . -name *~ -delete
+#   	find . -name *.o -delete
+#   	find . -name *.ibc -delete
+#
+#   .PHONY: app test alt-test clean

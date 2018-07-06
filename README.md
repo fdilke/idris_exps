@@ -20,6 +20,11 @@ Ctl-Alt-R compile/check current file. Gives quite helpful messages in a nice fon
 
 A [tutorial](https://eb.host.cs.st-andrews.ac.uk/writings/idris-tutorial.pdf)
 
+# Installing the Specdris testing library locally
+    git clone https://github.com/pheymann/specdris.git
+    cd specdris
+    ./project --install
+
 # Notes on book
 
 3 Type driven development. Loop is: Type, define, refine!
