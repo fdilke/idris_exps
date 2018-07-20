@@ -1,6 +1,7 @@
 module SpecTests.SpecTests
 
 import SpecTests.CollatzTests
+import SpecTests.FileHandlingTests
 import Specdris.Spec
 
 double : Num a => a -> a
@@ -33,3 +34,4 @@ specTests = spec $ do
       noddyMathTests
       basicTests
       collatzTests
+      fileHandlingTests

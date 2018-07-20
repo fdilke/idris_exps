@@ -9,4 +9,4 @@ modules = Lib
 
 tests = SpecTests.SpecTests.specTests
 
-opts = "-p specdris"
+opts = "-p specdris -p effects"

@@ -134,3 +134,9 @@ Also put `opts = "-p contrib specdris"` in an .ipkg file to include packages.
 In REPL can import with: e.g. `:module Test.Unit.Assertions`
 Can define nice spec-style tests with Specdris - later: understand how this library works
 
+To run something (e.g. main) that evaluates to an IO x:
+
+    :exec main
+    
+(note there's also :x, which fails because FFI not included??)    
+
