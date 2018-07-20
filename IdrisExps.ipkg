@@ -4,9 +4,9 @@ sourcedir = src
 
 modules = Lib
 	, MoreStuff.OtherLib
-	, SpecTests.SpecTests
+	, SpecTests.SpecIOTests
 	, SpecTests.CollatzTests
 
-tests = SpecTests.SpecTests.specTests
+tests = SpecTests.SpecIOTests.specIOTests
 
 opts = "-p specdris -p effects"
