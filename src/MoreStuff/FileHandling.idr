@@ -49,20 +49,32 @@ testFile = do
 -- Eff () [FILE (), STDIO, Count ::: STATE Int]
 -- TestFileIO () ()
 -- effLoadFile: (fileName: String) -> Eff (List String) [SELECT]
+
 effLoadFile: (fileName: String) -> Eff (List String) [FILE (), STDIO, Count ::: STATE Int]
 effLoadFile fileName = pure [ "Um, dunno" ]
 -- effLoadFile col qs = do row <- select (rowsIn col qs)
 --                      addQueens (col - 1) ((row, col) :: qs)
 
+{-
 sampleMain : IO ()
 sampleMain = run testFile
+
 
 export
 loadFile: (fileName: String) -> Maybe (List String)
 loadFile fileName = Just [ "todo: fix this!" ]
+-- want to replace it by other, which returns IO x not Maybe x:
+-}
 
--- want to replace it by this, which returns IO x not Maybe x:
-properLoadFile: (fileName: String) -> IO (List String)
-properLoadFile fileName =
-    run (effLoadFile fileName)
+loadLines: (Either FileError String) -> Maybe (List String)
+loadLines (Left error) = Nothing
+loadLines (Right text) = Just (lines text)
+
+export
+loadFile: (fileName: String) -> IO (Maybe (List String))
+loadFile fileName = do
+    contents <- readFile fileName
+    pure $ loadLines contents
+
+--    run (effLoadFile fileName)
 

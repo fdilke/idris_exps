@@ -9,7 +9,7 @@ triple : Num a => a -> a
 triple a = a + double a
 
 export
-basicTests: SpecTree' ffi
+basicTests: SpecTree
 basicTests =
     describe "Basic tests" $ do
       it "fulfils xx" $ do
@@ -17,7 +17,7 @@ basicTests =
         (triple 2) `shouldNotBe` 5
 
 export
-noddyMathTests: SpecTree' ffi
+noddyMathTests: SpecTree
 noddyMathTests =
     describe "This is my math test" $ do
       it "adds two natural numbers" $ do

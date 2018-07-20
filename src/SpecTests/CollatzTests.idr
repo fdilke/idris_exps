@@ -4,7 +4,7 @@ import MoreStuff.Collatz
 import Specdris.Spec
 
 export
-collatzTests: SpecTree' ffi
+collatzTests: SpecTree
 collatzTests =
     describe "Tests with Collatz iterations!" $ do
         it "does a single iterate" $ do
