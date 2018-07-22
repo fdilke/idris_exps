@@ -14,6 +14,9 @@
 
 # Notes on Atom
 
+hotkeys listed here:
+https://github.com/idris-hackers/atom-language-idris
+
 Ctl-Alt-R compile/check current file. Gives quite helpful messages in a nice font
 
 # Helpful Idris stuff
