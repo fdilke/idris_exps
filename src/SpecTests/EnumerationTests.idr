@@ -19,8 +19,10 @@ enumerationTests = let
             it "are foldable" $ do
                 let fold = foldr (+) 0 enum
                 fold `shouldBe` 6
+            it "are functorial" $ do
+                enumAsList((*2) <$> enum) `shouldBe` [2,4,6]
 
--- todo: inherit Show, Functor, Traversable, How about Applicative?
+-- todo: inherit Show, Functor, Eq, Traversable, How about Applicative?
 -- todo: make Enumeration a monad
 
 
