@@ -25,7 +25,22 @@ data AMapFoldable: Type -> Type where
 
 Foldable AMapFoldable where
     foldr func acc (MapFoldable f2 xs) =
-        foldr (\a => func (f2 a)) acc xs
+        foldr (func . f2) acc xs
 
 Functor Enumeration where
   map func (FoldableEnum xs) = FoldableEnum (MapFoldable func xs)
+
+data AnEnumApp: Type -> Type where
+    EnumApp: Foldable t => (t (a -> b)) -> t a -> AnEnumApp b
+
+Foldable AnEnumApp where
+    foldr func acc (EnumApp enumf enuma) =
+        foldr (\a, ac =>
+            foldr (\f =>
+                func (f a)
+            ) ac enumf
+        ) acc enuma
+
+Applicative Enumeration where
+  pure x = listAsEnum [x]
+  enumf <*> enuma = FoldableEnum (EnumApp enumf enuma)
