@@ -53,3 +53,13 @@ Applicative Enumeration where
         ) ac ef
     ) acc ea
 
+{-
+
+Traversable Enumeration where
+  traverse a_fb xs = ...
+
+interface (Functor t, Foldable t) => Traversable (t : Type -> Type) where
+  ||| Map each element of a structure to a computation, evaluate those
+  ||| computations and combine the results.
+  traverse : Applicative f => (a -> f b) -> t a -> f (t b)
+-}
