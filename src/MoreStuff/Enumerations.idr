@@ -3,44 +3,53 @@ module MoreStuff.Enumerations
 %access public export
 
 -- interface (Foldable f) => Enumeration (f : Type) where
+{-
+record Remuneration a where
+     constructor MkRemuneration
+     do_foldr : (b: Type) -> (func : a -> b) -> b
 
-data Enumeration: (elem: Type) -> Type where
-    FoldableEnum : Foldable t => (x : t a) -> Enumeration a
+muni: a -> Remuneration a
+muni x = MkRemuneration (\ty,f => f x)
 
-listAsEnum: List a -> Enumeration a
-listAsEnum xs = FoldableEnum xs
+record Degeneration a where
+     constructor MkDegeneration
+     do_foldr : { b: Type } -> (func : a -> b) -> b
+
+duni: a -> Degeneration a
+duni x = MkDegeneration (\f => f x)
+-}
+
+record Enumeration a where
+     constructor MkEnumeration
+     do_foldr : { acc: Type } -> (func : a -> acc -> acc) -> (init : acc) -> acc
+
+-- data Enumeration: (elem: Type) -> Type where
+--    FoldableEnum : Foldable t => (x : t a) -> Enumeration a
+
+--todo: make this foldableAsEnum
+foldableAsEnum: Foldable t => t a -> Enumeration a
+foldableAsEnum xs = MkEnumeration (\f,acc => (foldr f acc xs))
 
 enumAsList: Enumeration a -> List a
-enumAsList (FoldableEnum f) = foldr (::) [] f
+enumAsList xs = do_foldr xs (::) []
 
 Show a => Show (Enumeration a) where
   show enum = show (enumAsList enum)
 
 Foldable Enumeration where
-  foldr func acc (FoldableEnum f) =
-    foldr func acc f
-
-data AMapFoldable: Type -> Type where
-    MapFoldable: Foldable t => (a -> b) -> t a -> AMapFoldable b
-
-Foldable AMapFoldable where
-    foldr func acc (MapFoldable f2 xs) =
-        foldr (func . f2) acc xs
+  foldr func acc xs =
+    do_foldr xs func acc
 
 Functor Enumeration where
-  map func (FoldableEnum xs) = FoldableEnum (MapFoldable func xs)
-
-data AnEnumApp: Type -> Type where
-    EnumApp: Foldable t => (t (a -> b)) -> t a -> AnEnumApp b
-
-Foldable AnEnumApp where
-    foldr func acc (EnumApp enumf enuma) =
-        foldr (\a, ac =>
-            foldr (\f =>
-                func (f a)
-            ) ac enumf
-        ) acc enuma
+  map func xs = MkEnumeration $ \f,acc =>
+    do_foldr xs (f . func) acc
 
 Applicative Enumeration where
-  pure x = listAsEnum [x]
-  enumf <*> enuma = FoldableEnum (EnumApp enumf enuma)
+  pure x = MkEnumeration $ \f, acc => f x acc
+  ef <*> ea = MkEnumeration $ \f, acc =>
+    foldr (\a, ac =>
+        foldr (\f2 =>
+            f (f2 a)
+        ) ac ef
+    ) acc ea
+
