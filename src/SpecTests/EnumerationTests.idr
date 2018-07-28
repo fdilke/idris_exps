@@ -44,6 +44,11 @@ enumerationTests = let
                 map enumAsList (tail enum) `shouldBe`
                     Just [1, 2]
                 enumAsList (0 :: enum) `shouldBe` [0,1,2,3]
+            it "support equality testing" $ do
+                enum `shouldBe` enum
+                enum `shouldNotBe` (1 :: enum)
+                enum `shouldNotBe` emptyEnum
+                enum `shouldNotBe` (enum ++ enum)
 
 -- todo: inherit Traversable, how about Eq?
 -- todo: make Enumeration a monad

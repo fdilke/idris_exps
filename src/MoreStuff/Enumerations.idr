@@ -92,4 +92,13 @@ infixr 7 ::
 (::) x xs = MkEnumeration $ \f, acc =>
     f x $ foldr f acc xs
 
-
+Eq a => Eq (Enumeration a) where
+    (==) xs ys = assert_total $
+        case (head xs, head ys) of
+            (Nothing, Nothing) => True
+            (Nothing, Just _) => False
+            (Just _, Nothing) => False
+            (Just x, Just y) =>
+                x == y && (tail xs == (tail ys))
+-- todo: fix totality checking
+-- todo: try more efficient version with concurrency
