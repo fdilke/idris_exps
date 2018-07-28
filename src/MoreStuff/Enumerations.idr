@@ -63,29 +63,7 @@ infixr 7 ++
 emptyEnum: { a: Type } -> Enumeration a
 emptyEnum {a} = MkEnumeration $ \f, acc => acc
 
--- hubber: Int -> Int
--- hubber (x: Int) = x + 1
-
---  traverse (a_fb: a -> f b) xs =
---    let acc: Enumeration (f b) = emptyEnum in
-
 Traversable Enumeration where
   traverse {f} {a} {b} a_fb xs =
-    let ee: (Enumeration b) = emptyEnum
-        acc : f (Enumeration b) = pure ee in
-        foldr fun acc xs where
-            fun x ac = [| map pure (a_fb x) ++ ac |]
--- x: a, ac: f (E b) ; a_fb x : f b
---            foldr fun (pure (emptyEnum {f b})) xs
-
-{-
-
-implementation Traversable (Vect n) where
-    traverse f []        = [| [] |]
-    traverse f (x :: xs) = [| f x :: traverse f xs |]
-
-interface (Functor t, Foldable t) => Traversable (t : Type -> Type) where
-  ||| Map each element of a structure to a computation, evaluate those
-  ||| computations and combine the results.
-  traverse : Applicative f => (a -> f b) -> t a -> f (t b)
--}
+    foldr fun (pure emptyEnum) xs where
+        fun x acc = [| map pure (a_fb x) ++ acc |]
