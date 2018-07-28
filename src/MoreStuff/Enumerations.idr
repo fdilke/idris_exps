@@ -67,3 +67,29 @@ Traversable Enumeration where
   traverse {f} {a} {b} a_fb xs =
     foldr fun (pure emptyEnum) xs where
         fun x acc = [| map pure (a_fb x) ++ acc |]
+
+head: Enumeration a -> Maybe a
+head = foldr fun Nothing where
+    fun x acc = Just $
+        fromMaybe x acc
+
+tail: Enumeration a -> Maybe (Enumeration a)
+tail xs = foldr fun Nothing xs where
+    fun x acc =
+        if isNothing acc
+        then Just (MkEnumeration tailfold)
+        else acc
+    tailfold: (f: a -> ac -> ac) -> ac -> ac
+    tailfold f c =
+        fromMaybe c (foldr funn Nothing xs) where
+            funn y opt =
+                if isNothing opt
+                then Just c
+                else map (f y) opt
+
+infixr 7 ::
+(::) : a -> Enumeration a -> Enumeration a
+(::) x xs = MkEnumeration $ \f, acc =>
+    f x $ foldr f acc xs
+
+

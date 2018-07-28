@@ -37,6 +37,13 @@ enumerationTests = let
                 let t_out = traverse a_fb enum
                 let mapped: Maybe (List Int) = map enumAsList t_out
                 mapped `shouldBe` (Just [2,3,4])
+            it "support head/tail/::" $ do
+                head (the (Enumeration Int) emptyEnum)
+                    `shouldBe` Nothing
+                head enum `shouldBe` Just 3
+                map enumAsList (tail enum) `shouldBe`
+                    Just [1, 2]
+                enumAsList (0 :: enum) `shouldBe` [0,1,2,3]
 
 -- todo: inherit Traversable, how about Eq?
 -- todo: make Enumeration a monad
