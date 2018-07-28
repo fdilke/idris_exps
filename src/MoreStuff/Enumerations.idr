@@ -27,8 +27,8 @@ record Enumeration a where
 --    FoldableEnum : Foldable t => (x : t a) -> Enumeration a
 
 --todo: make this foldableAsEnum
-foldableAsEnum: Foldable t => t a -> Enumeration a
-foldableAsEnum xs = MkEnumeration (\f,acc => (foldr f acc xs))
+makeEnum: Foldable t => t a -> Enumeration a
+makeEnum xs = MkEnumeration (\f,acc => (foldr f acc xs))
 
 enumAsList: Enumeration a -> List a
 enumAsList xs = do_foldr xs (::) []
@@ -52,6 +52,14 @@ Applicative Enumeration where
             f (f2 a)
         ) ac ef
     ) acc ea
+
+infixr 7 ++
+(++) : Enumeration a -> Enumeration a -> Enumeration a
+(++) xs ys = MkEnumeration $ \f, acc =>
+    foldr f (
+        foldr f acc ys
+    ) xs
+
 
 {-
 

@@ -10,7 +10,7 @@ enumerationTests = let
     t = 0
     u = 7
     list = [1,2,3]
-    enum = foldableAsEnum list in
+    enum = makeEnum list in
         describe "Enumerations" $ do
             it "are interchangeable with lists" $ do
                 enumAsList enum `shouldBe` list
@@ -23,8 +23,12 @@ enumerationTests = let
                 enumAsList((*2) <$> enum) `shouldBe` [2,4,6]
             it "are applicative" $ do
                 enumAsList(pure 3) `shouldBe` [3]
-                let hof = foldableAsEnum [(*2), (*3)]
+                let hof = makeEnum [(*2), (*3)]
                 enumAsList(hof <*> enum) `shouldBe` [2,3,4,6,6,9]
+            it "can be joined" $ do
+                let enum2 = makeEnum [4,5,6]
+                enumAsList (enum ++ enum2) `shouldBe`
+                    [1,2,3,4,5,6]
 {-
             it "are traversable" $ do
                 let a_fb = \x => Just (x + 1)   -- can we use where?
