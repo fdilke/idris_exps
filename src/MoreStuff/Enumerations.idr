@@ -60,6 +60,8 @@ infixr 7 ++
         foldr f acc ys
     ) xs
 
+emptyEnum: { default Void a: Type } -> Enumeration a
+emptyEnum {a} = MkEnumeration $ \f, acc => acc
 
 {-
 
