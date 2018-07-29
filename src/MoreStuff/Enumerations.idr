@@ -102,3 +102,9 @@ Eq a => Eq (Enumeration a) where
                 x == y && (tail xs == (tail ys))
 -- todo: fix totality checking
 -- todo: try more efficient version with concurrency
+
+Monad Enumeration where
+    join xxs = MkEnumeration $ \f, acc =>
+        foldr ( \xs, cc =>
+            foldr f cc xs
+        ) acc xxs

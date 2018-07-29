@@ -49,8 +49,16 @@ enumerationTests = let
                 enum `shouldNotBe` (1 :: enum)
                 enum `shouldNotBe` emptyEnum
                 enum `shouldNotBe` (enum ++ enum)
+            it "support monad binding" $ do
+                let f = \x => makeEnum [0, x]
+                let bound = enum >>= f
+                enumAsList bound `shouldBe` [0,1,0,2,0,3]
+            it "support monad join" $ do
+                let enum2 = map (+3) enum
+                let joined = join (makeEnum [enum, enum2])
+                enumAsList joined `shouldBe` [1,2,3,4,5,6]
 
 -- todo: inherit Traversable, how about Eq?
--- todo: make Enumeration a monad
+-- todo: make Enumeration a monad. Add Alternative
 
 
