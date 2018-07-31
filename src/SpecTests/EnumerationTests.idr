@@ -12,6 +12,11 @@ enumerationTests = let
     list = [1,2,3]
     enum = makeEnum list in
         describe "Enumerations" $ do
+            it "support equality testing" $ do
+                enum `shouldBe` enum
+                enum `shouldNotBe` (1 :: enum)
+                enum `shouldNotBe` empty
+                enum `shouldNotBe` (enum ++ enum)
             it "are interchangeable with lists" $ do
                 enumAsList enum `shouldBe` list
             it "are showable" $ do
@@ -20,48 +25,42 @@ enumerationTests = let
                 let fold = foldr (+) 0 enum
                 fold `shouldBe` 6
             it "are functorial" $ do
-                enumAsList((*2) <$> enum) `shouldBe` [2,4,6]
+                (*2) <$> enum `shouldBe` (makeEnum [2,4,6])
             it "are applicative" $ do
-                enumAsList(pure 3) `shouldBe` [3]
+                pure 3 `shouldBe` (makeEnum [3])
                 let hof = makeEnum [(*2), (*3)]
-                enumAsList(hof <*> enum) `shouldBe` [2,3,4,6,6,9]
+                hof <*> enum `shouldBe` (makeEnum [2,3,4,6,6,9])
             it "can be joined" $ do
                 let enum2 = makeEnum [4,5,6]
-                enumAsList (enum ++ enum2) `shouldBe`
-                    [1,2,3,4,5,6]
+                enum ++ enum2 `shouldBe`
+                    (makeEnum [1,2,3,4,5,6])
             it "feature an empty enum" $ do
                 let ee: (Enumeration Int) = empty
-                enumAsList ee `shouldBe` []
+                ee `shouldBe` (makeEnum [])
             it "are traversable" $ do
                 let a_fb = \x => Just (x + 1)   -- can we use where?
                 let t_out = traverse a_fb enum
-                let mapped: Maybe (List Int) = map enumAsList t_out
-                mapped `shouldBe` (Just [2,3,4])
+                t_out `shouldBe` (Just (makeEnum [2,3,4]))
             it "support head/tail/::" $ do
                 head (the (Enumeration Int) empty)
                     `shouldBe` Nothing
                 head enum `shouldBe` Just 3
-                map enumAsList (tail enum) `shouldBe`
-                    Just [1, 2]
-                enumAsList (0 :: enum) `shouldBe` [0,1,2,3]
-            it "support equality testing" $ do
-                enum `shouldBe` enum
-                enum `shouldNotBe` (1 :: enum)
-                enum `shouldNotBe` empty
-                enum `shouldNotBe` (enum ++ enum)
+                tail enum `shouldBe`
+                    Just (makeEnum [1, 2])
+                0 :: enum `shouldBe` (makeEnum [0,1,2,3])
             it "support monad binding" $ do
                 let f = \x => makeEnum [0, x]
-                let bound = enum >>= f
-                enumAsList bound `shouldBe` [0,1,0,2,0,3]
+                enum >>= f `shouldBe`
+                    (makeEnum [0,1,0,2,0,3])
             it "support monad join" $ do
                 let enum2 = map (+3) enum
-                let joined = join (makeEnum [enum, enum2])
-                enumAsList joined `shouldBe` [1,2,3,4,5,6]
+                join (makeEnum [enum, enum2]) `shouldBe`
+                    (makeEnum [1,2,3,4,5,6])
             it "support list comprehensions via Alternative" $ do
                 empty `shouldBe` (the (Enumeration Int) (makeEnum []))
                 enum <|> enum `shouldBe` (makeEnum [1,2,3,1,2,3])
-                let comp = [ x*x | x <- enum, x < 3 ]
-                comp `shouldBe` (makeEnum [1, 4])
+                [ x*x | x <- enum, x < 3 ] `shouldBe`
+                    (makeEnum [1, 4])
 
 -- todo: inherit Traversable, how about Eq?
 -- todo: make Enumeration a monad. Add Alternative
