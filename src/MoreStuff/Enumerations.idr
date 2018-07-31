@@ -108,3 +108,13 @@ Monad Enumeration where
         foldr ( \xs, cc =>
             foldr f cc xs
         ) acc xxs
+
+Alternative Enumeration where
+    empty = emptyEnum
+    (<|>) = (++)
+{-
+interface Applicative f => Alternative (f : Type -> Type) where
+    empty : f a
+    (<|>) : f a -> f a -> f a
+-}
+

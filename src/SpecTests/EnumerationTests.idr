@@ -57,8 +57,13 @@ enumerationTests = let
                 let enum2 = map (+3) enum
                 let joined = join (makeEnum [enum, enum2])
                 enumAsList joined `shouldBe` [1,2,3,4,5,6]
+            it "support list comprehensions via Alternative" $ do
+                empty `shouldBe` (the (Enumeration Int) (makeEnum []))
+                enum <|> enum `shouldBe` (makeEnum [1,2,3,1,2,3])
+                let comp = [ x*x | x <- enum, x < 3 ]
+                comp `shouldBe` (makeEnum [1, 4])
 
 -- todo: inherit Traversable, how about Eq?
 -- todo: make Enumeration a monad. Add Alternative
-
-
+-- consider replacing, or aliasing emptyEnum/:: with empty/<|>
+-- refactor so we establish Eq and then use it, don't need enum2list
