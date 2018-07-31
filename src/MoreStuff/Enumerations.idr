@@ -114,3 +114,4 @@ Alternative Enumeration where
     (<|>) = (++)
 
 -- todo: can we avoid defining empty' and ++ just for Traversable?
+-- can do with 'mutual' blocks?

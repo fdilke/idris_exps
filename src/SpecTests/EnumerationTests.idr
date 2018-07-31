@@ -62,6 +62,5 @@ enumerationTests = let
                 [ x*x | x <- enum, x < 3 ] `shouldBe`
                     (makeEnum [1, 4])
 
--- todo: inherit Traversable, how about Eq?
--- todo: make Enumeration a monad. Add Alternative
--- refactor so we establish Eq and then use it, don't need enum2list
+-- is a cast between List a and Enumeration a a good idea?
+-- can there be syntax so <1,2,3> is an enumeration?
