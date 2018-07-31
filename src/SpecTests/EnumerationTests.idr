@@ -30,7 +30,7 @@ enumerationTests = let
                 enumAsList (enum ++ enum2) `shouldBe`
                     [1,2,3,4,5,6]
             it "feature an empty enum" $ do
-                let ee: (Enumeration Int) = emptyEnum
+                let ee: (Enumeration Int) = empty
                 enumAsList ee `shouldBe` []
             it "are traversable" $ do
                 let a_fb = \x => Just (x + 1)   -- can we use where?
@@ -38,7 +38,7 @@ enumerationTests = let
                 let mapped: Maybe (List Int) = map enumAsList t_out
                 mapped `shouldBe` (Just [2,3,4])
             it "support head/tail/::" $ do
-                head (the (Enumeration Int) emptyEnum)
+                head (the (Enumeration Int) empty)
                     `shouldBe` Nothing
                 head enum `shouldBe` Just 3
                 map enumAsList (tail enum) `shouldBe`
@@ -47,7 +47,7 @@ enumerationTests = let
             it "support equality testing" $ do
                 enum `shouldBe` enum
                 enum `shouldNotBe` (1 :: enum)
-                enum `shouldNotBe` emptyEnum
+                enum `shouldNotBe` empty
                 enum `shouldNotBe` (enum ++ enum)
             it "support monad binding" $ do
                 let f = \x => makeEnum [0, x]
@@ -65,5 +65,4 @@ enumerationTests = let
 
 -- todo: inherit Traversable, how about Eq?
 -- todo: make Enumeration a monad. Add Alternative
--- consider replacing, or aliasing emptyEnum/:: with empty/<|>
 -- refactor so we establish Eq and then use it, don't need enum2list

@@ -60,12 +60,12 @@ infixr 7 ++
         foldr f acc ys
     ) xs
 
-emptyEnum: { a: Type } -> Enumeration a
-emptyEnum {a} = MkEnumeration $ \f, acc => acc
+empty': { a: Type } -> Enumeration a
+empty' {a} = MkEnumeration $ \f, acc => acc
 
 Traversable Enumeration where
   traverse {f} {a} {b} a_fb xs =
-    foldr fun (pure emptyEnum) xs where
+    foldr fun (pure empty') xs where
         fun x acc = [| map pure (a_fb x) ++ acc |]
 
 head: Enumeration a -> Maybe a
@@ -110,11 +110,7 @@ Monad Enumeration where
         ) acc xxs
 
 Alternative Enumeration where
-    empty = emptyEnum
+    empty = empty'
     (<|>) = (++)
-{-
-interface Applicative f => Alternative (f : Type -> Type) where
-    empty : f a
-    (<|>) : f a -> f a -> f a
--}
 
+-- todo: can we avoid defining empty' and ++ just for Traversable?
