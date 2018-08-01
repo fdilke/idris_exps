@@ -10,3 +10,7 @@ modules = Lib
 tests = SpecTests.SpecIOTests.specIOTests
 
 opts = "-p specdris -p effects"
+
+executable = idris_exps
+
+main = Main

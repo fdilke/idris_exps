@@ -1,6 +1,7 @@
 # IDEA
 *.iml
 .idea/
+idris_exps
 
 # Idris binary files
 *.ibc

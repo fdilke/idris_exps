@@ -26,9 +26,8 @@ record Enumeration a where
 -- data Enumeration: (elem: Type) -> Type where
 --    FoldableEnum : Foldable t => (x : t a) -> Enumeration a
 
---todo: make this foldableAsEnum
 makeEnum: Foldable t => t a -> Enumeration a
-makeEnum xs = MkEnumeration (\f,acc => (foldr f acc xs))
+makeEnum xs = MkEnumeration $ \f,acc => foldr f acc xs
 
 enumAsList: Enumeration a -> List a
 enumAsList xs = do_foldr xs (::) []
