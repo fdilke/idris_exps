@@ -96,15 +96,15 @@ mwhile t b = do
 --                    mwhileEnum t g b
 --         False => pure ()
 
-mwhileEnum : (test : IO Bool) -> (get : IO String) -> (pointless: p) -> IO ()
-mwhileEnum t g p = do
+mwhileEnum : (test : IO Bool) -> (get : IO String) -> (fun: Int -> Int) -> (accstart: acctype) -> IO acctype
+mwhileEnum t g f acc = do
     v <- t
     case v of
         True => do {
             x <- g
-            mwhileEnum t g p
+            mwhileEnum t g f acc
         }
-        False => pure ()
+        False => pure acc
 
 export
 linesAsEnum: (fileName: String) -> IO (Maybe (Enumeration String))
@@ -118,6 +118,7 @@ linesAsEnum fileName = do
                       pure (not x) })
                 (do { Right l <- fGetLine h
                       pure l })
+                (+1)
                 0
             closeFile h
 --            let e = (makeEnum ["bubb"])
