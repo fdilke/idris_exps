@@ -101,8 +101,8 @@ mwhileEnum t g f acc = do
     v <- t
     case v of
         True => do {
-            x <- g
-            mwhileEnum t g f acc
+            line <- g
+            mwhileEnum t g f (f line acc)
         }
         False => pure acc
 
@@ -112,7 +112,7 @@ linesAsEnum fileName = do
     file <- openFile fileName Read
     case file of
         Right h => do {
-            mwhileEnum
+            let ppp = mwhileEnum
                 (do {
                       x <- fEOF h
                       pure (not x) })
