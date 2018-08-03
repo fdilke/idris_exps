@@ -81,19 +81,31 @@ loadFile fileName = do
 
 -- split out 'monadic stateful while' as a separate utility?
 mwhile : (test : IO Bool) -> (body : IO ()) -> IO ()
-mwhile t b = do v <- t
-                case v of
-                     True => do b
-                                mwhile t b
-                     False => pure ()
+mwhile t b = do
+    v <- t
+    case v of
+         True => do b
+                    mwhile t b
+         False => pure ()
 
-mrtumnus: (List a) -> String
-mrtumnus xs =
-    case xs of
-        [] => "7"
-        _ => "1"
+--mwhileEnum : (test : IO Bool) -> (getter: IO String) -> (body : IO ()) -> IO ()
+--mwhileEnum t g b = do
+--    v <- t
+--    case v of
+--         True => do b
+--                    mwhileEnum t g b
+--         False => pure ()
 
-
+mwhileEnum : (test : IO Bool) -> (get : IO String) -> (body : IO ()) -> IO ()
+mwhileEnum t g b = do
+    v <- t
+    case v of
+        True => do {
+            b
+            x <- g
+            mwhileEnum t g b
+        }
+        False => pure ()
 
 export
 linesAsEnum: (fileName: String) -> IO (Maybe (Enumeration String))
@@ -101,10 +113,12 @@ linesAsEnum fileName = do
     file <- openFile fileName Read
     case file of
         Right h => do {
-            mwhile
+            mwhileEnum
                 (do {
                       x <- fEOF h
                       pure (not x) })
+                (do { Right l <- fGetLine h
+                      pure l })
                 (do { Right l <- fGetLine h
                       putStr l })
             closeFile h
