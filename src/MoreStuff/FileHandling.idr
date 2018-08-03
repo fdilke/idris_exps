@@ -96,7 +96,7 @@ mwhile t b = do
 --                    mwhileEnum t g b
 --         False => pure ()
 
-mwhileEnum : (test : IO Bool) -> (get : IO String) -> (fun: Int -> Int) -> (accstart: acctype) -> IO acctype
+mwhileEnum : (test : IO Bool) -> (get : IO String) -> (fun: String -> acctype -> acctype) -> (accstart: acctype) -> IO acctype
 mwhileEnum t g f acc = do
     v <- t
     case v of
@@ -118,7 +118,7 @@ linesAsEnum fileName = do
                       pure (not x) })
                 (do { Right l <- fGetLine h
                       pure l })
-                (+1)
+                (\txt, n => n+1)
                 0
             closeFile h
 --            let e = (makeEnum ["bubb"])
