@@ -96,14 +96,13 @@ mwhile t b = do
 --                    mwhileEnum t g b
 --         False => pure ()
 
-mwhileEnum : (test : IO Bool) -> (get : IO String) -> (body : IO ()) -> IO ()
-mwhileEnum t g b = do
+mwhileEnum : (test : IO Bool) -> (get : IO String) -> (pointless: p) -> IO ()
+mwhileEnum t g p = do
     v <- t
     case v of
         True => do {
-            b
             x <- g
-            mwhileEnum t g b
+            mwhileEnum t g p
         }
         False => pure ()
 
@@ -119,9 +118,11 @@ linesAsEnum fileName = do
                       pure (not x) })
                 (do { Right l <- fGetLine h
                       pure l })
-                (do { Right l <- fGetLine h
-                      putStr l })
+                0
             closeFile h
-            pure (Just (makeEnum ["bubb"]))
+--            let e = (makeEnum ["bubb"])
+            let e = MkEnumeration $ \f, acc =>
+                        f "bubb" acc
+            pure (Just e)
         }
         Left err => pure Nothing
