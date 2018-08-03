@@ -127,7 +127,41 @@ linesAsEnum fileName = do
         }
         Left err => pure empty
 
+
+mwhileEnum2 : (test : IO Bool) -> (get : IO inp) -> (fun: IO inp -> acctype -> acctype) -> (accstart: acctype) -> IO acctype
+mwhileEnum2 t g f acc = do
+    v <- t
+    case v of
+        True => do {
+            mwhileEnum2 t g f (f g acc)
+        }
+        False => pure acc
+
 {-
+piff: File -> Enumeration (IO String)
+piff h = MkEnumeration $ \f, acc =>
+    mwhileEnum2
+         (do {
+               x <- fEOF h
+               pure (not x) })
+         (do { Right l <- fGetLine h
+               pure l })
+         f
+         (pure acc)
+
+
+-- mwhileEnum3 : (test : IO Bool) -> (get : IO inp) -> (fun: inp -> acctype -> acctype) -> (accstart: acctype) -> IO acctype
+-- mwhileEnum3 t g f acc = do
+--    v <- t
+--    case v of
+--        True => do {
+--            line <- g
+--            mwhileEnum3 t g f (f line acc)
+--        }
+--        False => pure acc
+
+
+
 enumTheLines: File -> (func : String -> acc -> acc) -> (init : acc) -> IO acc
 enumTheLines h f a =
     pure a -- do this properly
@@ -143,19 +177,6 @@ pest h = MkEnumeration $ \f, acc =>
         f
         acc
 
-piff h = do {
-     let ppp = mwhileEnum
-         (do {
-               x <- fEOF h
-               pure (not x) })
-         (do { Right l <- fGetLine h
-               pure l })
-         (\txt, n => n+1)
-         0
-     closeFile h
-     pure $ MkEnumeration $ \f, acc =>
-                 f "bubb" acc
- }
 
 whinesAsEnum: (fileName: String) -> IO (Enumeration String)
 whinesAsEnum fileName = do
