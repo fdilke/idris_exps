@@ -20,9 +20,9 @@ fileHandlingTests =
        pure $ lines `shouldBe` Nothing
     it "can load a file as enumeration" $ do
        enum <- linesAsEnum "resources/languages.txt"
-       pure $ (enumAsList <$> enum) `shouldBe` Just ["bubb"] -- "English", "German", "Polish", "Hindustani"]
+       pure $ enumAsList enum `shouldBe` ["bubb"] -- "English", "German", "Polish", "Hindustani"]
     it "correctly handles enumeration of a missing file" $ do
        enum <- linesAsEnum "no-such-file.txt"
-       pure $ enum `shouldBe` Nothing
+       pure $ enum `shouldBe` empty
     it "does some other damnfool thing" $
       pure $ pendingWith "todo whatever"

@@ -107,7 +107,7 @@ mwhileEnum t g f acc = do
         False => pure acc
 
 export
-linesAsEnum: (fileName: String) -> IO (Maybe (Enumeration String))
+linesAsEnum: (fileName: String) -> IO (Enumeration String)
 linesAsEnum fileName = do
     file <- openFile fileName Read
     case file of
@@ -124,6 +124,6 @@ linesAsEnum fileName = do
 --            let e = (makeEnum ["bubb"])
             let e = MkEnumeration $ \f, acc =>
                         f "bubb" acc
-            pure (Just e)
+            pure e
         }
-        Left err => pure Nothing
+        Left err => pure empty
