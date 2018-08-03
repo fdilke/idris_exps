@@ -52,20 +52,22 @@ Applicative Enumeration where
         ) ac ef
     ) acc ea
 
-infixr 7 ++
-(++) : Enumeration a -> Enumeration a -> Enumeration a
-(++) xs ys = MkEnumeration $ \f, acc =>
-    foldr f (
-        foldr f acc ys
-    ) xs
+mutual
+    Traversable Enumeration where
+      traverse {f} {a} {b} a_fb xs =
+        foldr fun (pure empty) xs where
+            fun x acc = [| map pure (a_fb x) ++ acc |]
 
-empty': { a: Type } -> Enumeration a
-empty' {a} = MkEnumeration $ \f, acc => acc
+    Alternative Enumeration where
+        empty = MkEnumeration $ \f, acc => acc
+        (<|>) xs ys = MkEnumeration $ \f, acc =>
+            foldr f (
+              foldr f acc ys
+            ) xs
 
-Traversable Enumeration where
-  traverse {f} {a} {b} a_fb xs =
-    foldr fun (pure empty') xs where
-        fun x acc = [| map pure (a_fb x) ++ acc |]
+    infixr 7 ++
+    (++) : Enumeration a -> Enumeration a -> Enumeration a
+    (++) = (<|>)
 
 head: Enumeration a -> Maybe a
 head = foldr fun Nothing where
@@ -107,10 +109,6 @@ Monad Enumeration where
         foldr ( \xs, cc =>
             foldr f cc xs
         ) acc xxs
-
-Alternative Enumeration where
-    empty = empty'
-    (<|>) = (++)
 
 -- todo: can we avoid defining empty' and ++ just for Traversable?
 -- can do with 'mutual' blocks?
