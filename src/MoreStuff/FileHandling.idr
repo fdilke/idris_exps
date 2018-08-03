@@ -122,8 +122,47 @@ linesAsEnum fileName = do
                 0
             closeFile h
 --            let e = (makeEnum ["bubb"])
-            let e = MkEnumeration $ \f, acc =>
+            pure $ MkEnumeration $ \f, acc =>
                         f "bubb" acc
-            pure e
         }
         Left err => pure empty
+
+{-
+enumTheLines: File -> (func : String -> acc -> acc) -> (init : acc) -> IO acc
+enumTheLines h f a =
+    pure a -- do this properly
+
+pest: File -> IO (Enumeration String)
+pest h = MkEnumeration $ \f, acc =>
+    mwhileEnum
+        (do {
+              x <- fEOF h
+              pure (not x) })
+        (do { Right l <- fGetLine h
+              pure l })
+        f
+        acc
+
+piff h = do {
+     let ppp = mwhileEnum
+         (do {
+               x <- fEOF h
+               pure (not x) })
+         (do { Right l <- fGetLine h
+               pure l })
+         (\txt, n => n+1)
+         0
+     closeFile h
+     pure $ MkEnumeration $ \f, acc =>
+                 f "bubb" acc
+ }
+
+whinesAsEnum: (fileName: String) -> IO (Enumeration String)
+whinesAsEnum fileName = do
+    file <- openFile fileName Read
+    let ans = case file of
+        Right h => piff h
+        Left err => pure empty
+    closeFile h
+    pure ans
+-}

@@ -2,29 +2,9 @@ module MoreStuff.Enumerations
 
 %access public export
 
--- interface (Foldable f) => Enumeration (f : Type) where
-{-
-record Remuneration a where
-     constructor MkRemuneration
-     do_foldr : (b: Type) -> (func : a -> b) -> b
-
-muni: a -> Remuneration a
-muni x = MkRemuneration (\ty,f => f x)
-
-record Degeneration a where
-     constructor MkDegeneration
-     do_foldr : { b: Type } -> (func : a -> b) -> b
-
-duni: a -> Degeneration a
-duni x = MkDegeneration (\f => f x)
--}
-
 record Enumeration a where
      constructor MkEnumeration
      do_foldr : { acc: Type } -> (func : a -> acc -> acc) -> (init : acc) -> acc
-
--- data Enumeration: (elem: Type) -> Type where
---    FoldableEnum : Foldable t => (x : t a) -> Enumeration a
 
 makeEnum: Foldable t => t a -> Enumeration a
 makeEnum xs = MkEnumeration $ \f,acc => foldr f acc xs
