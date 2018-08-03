@@ -1,5 +1,6 @@
 module MoreStuff.FileHandling
 
+import MoreStuff.Enumerations
 import Effects
 import Effect.File
 import Effect.State
@@ -78,3 +79,35 @@ loadFile fileName = do
 
 --    run (effLoadFile fileName)
 
+-- split out 'monadic stateful while' as a separate utility?
+mwhile : (test : IO Bool) -> (body : IO ()) -> IO ()
+mwhile t b = do v <- t
+                case v of
+                     True => do b
+                                mwhile t b
+                     False => pure ()
+
+mrtumnus: (List a) -> String
+mrtumnus xs =
+    case xs of
+        [] => "7"
+        _ => "1"
+
+
+
+export
+linesAsEnum: (fileName: String) -> IO (Maybe (Enumeration String))
+linesAsEnum fileName = do
+    file <- openFile fileName Read
+    case file of
+        Right h => do {
+            mwhile
+                (do {
+                      x <- fEOF h
+                      pure (not x) })
+                (do { Right l <- fGetLine h
+                      putStr l })
+            closeFile h
+            pure (Just (makeEnum ["bubb"]))
+        }
+        Left err => pure Nothing

@@ -3,6 +3,7 @@ module SpecTests.FileHandlingTests
 import MoreStuff.FileHandling
 import Specdris.SpecIO
 import Specdris.Expectations
+import MoreStuff.Enumerations
 
 export
 fileHandlingTests: SpecTree
@@ -14,14 +15,14 @@ fileHandlingTests =
     it "can load the contents of a file" $ do
       lines <- loadFile "resources/languages.txt"
       pure $ lines `shouldBe` Just ["English", "German", "Polish", "Hindustani"]
-    it "correctly handles a missing file" $ do
+    it "correctly handles loading of a missing file" $ do
        lines <- loadFile "no-such-file.txt"
        pure $ lines `shouldBe` Nothing
+    it "can load a file as enumeration" $ do
+       enum <- linesAsEnum "resources/languages.txt"
+       pure $ (enumAsList <$> enum) `shouldBe` Just ["bubb"] -- "English", "German", "Polish", "Hindustani"]
+    it "correctly handles enumeration of a missing file" $ do
+       enum <- linesAsEnum "no-such-file.txt"
+       pure $ enum `shouldBe` Nothing
     it "does some other damnfool thing" $
       pure $ pendingWith "todo whatever"
-
-{-
-        it "can use a nicer syntax" $
-            map (`shouldBe` ["English", "French"]) (loadFile "languages.txt")
--}
-
