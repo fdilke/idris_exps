@@ -162,3 +162,13 @@ B | A | D
 - a square of nine letters,
 only with each row and column a word
 
+---
+
+## A Journey of Exploration
+
+It seems a childishly simple task but...
+
+this has already led to many interesting
+discoveries which I can tell you about next time.
+
+THANK YOU
