@@ -131,11 +131,11 @@ linesAsEnum fileName = do
         Left err => pure empty
 
 
-mwhileEnum2 : (test : IO Bool) ->
-    (get : IO inp) ->
-    (fun: IO inp -> acctype -> acctype) ->
+mwhileEnum2 : Monad m => (test : m Bool) ->
+    (get : m inp) ->
+    (fun: m inp -> acctype -> acctype) ->
     (accstart: acctype) ->
-    IO acctype
+    m acctype
 mwhileEnum2 t g f acc = do
     v <- t
     if v then do
