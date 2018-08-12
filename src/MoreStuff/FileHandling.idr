@@ -98,8 +98,8 @@ mwhile t b = do
 
 mwhileEnum : Monad m =>
     (test : m Bool) ->
-    (get : m String) ->
-    (fun: String -> acctype -> acctype) ->
+    (get : m x) ->
+    (fun: x -> acctype -> acctype) ->
     (accstart: acctype) ->
     m acctype
 mwhileEnum t g f acc = do
@@ -115,20 +115,20 @@ linesAsEnum: (fileName: String) -> IO (Enumeration String)
 linesAsEnum fileName = do
     file <- openFile fileName Read
     case file of
-        Right h => do {
+        Right h => do
             let ppp = mwhileEnum
-                (do {
-                      x <- fEOF h
-                      pure (not x) })
-                (do { Right l <- fGetLine h
-                      pure l })
-                (\txt, n => n+1)
+                (do
+                    x <- fEOF h
+                    pure (not x) )
+                (do
+                    Right l <- fGetLine h
+                    pure l )
+                (\txt : String, n : Int => n+1)
                 0
             closeFile h
 --            let e = (makeEnum ["bubb"])
             pure $ MkEnumeration $ \f, acc =>
                         f "bubb" acc
-        }
         Left err => pure empty
 
 
@@ -193,4 +193,22 @@ whinesAsEnum fileName = do
         Left err => pure empty
     closeFile h
     pure ans
+
+the problem: We have to return an IO (Enumeration String)
+Or an Enumeration (IO String) would do, then apply sequence
+But, every time we enumerate: we have to open a file,
+do the enumeration, then close it again.
+So maybe mwhile is not the way forward.
+Instead... write a function that does what we can with the bits available.
+Given f and acc do:
+    open the file (So we're in an IO context)
+    error check
+    while there are lines (use an mwhile variant here??):
+        fold each line into acc
+    close the file (still in IO context)
+    return pure of the acc
+
+Does it help if the acc was an "IO a" to begin with?
 -}
+
+
