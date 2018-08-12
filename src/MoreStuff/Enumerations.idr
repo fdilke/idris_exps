@@ -90,5 +90,5 @@ Monad Enumeration where
             foldr f cc xs
         ) acc xxs
 
--- todo: can we avoid defining empty' and ++ just for Traversable?
--- can do with 'mutual' blocks?
+-- todo: generalize 'mwhile' into a proper thing
+-- todo: write a continuation monad

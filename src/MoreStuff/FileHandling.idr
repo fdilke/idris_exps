@@ -96,7 +96,10 @@ mwhile t b = do
 --                    mwhileEnum t g b
 --         False => pure ()
 
-mwhileEnum : (test : IO Bool) -> (get : IO String) -> (fun: String -> acctype -> acctype) -> (accstart: acctype) -> IO acctype
+mwhileEnum : (test : IO Bool) -> (get : IO String) ->
+    (fun: String -> acctype -> acctype) ->
+    (accstart: acctype) ->
+    IO acctype
 mwhileEnum t g f acc = do
     v <- t
     case v of
@@ -128,14 +131,17 @@ linesAsEnum fileName = do
         Left err => pure empty
 
 
-mwhileEnum2 : (test : IO Bool) -> (get : IO inp) -> (fun: IO inp -> acctype -> acctype) -> (accstart: acctype) -> IO acctype
+mwhileEnum2 : (test : IO Bool) ->
+    (get : IO inp) ->
+    (fun: IO inp -> acctype -> acctype) ->
+    (accstart: acctype) ->
+    IO acctype
 mwhileEnum2 t g f acc = do
     v <- t
-    case v of
-        True => do {
-            mwhileEnum2 t g f (f g acc)
-        }
-        False => pure acc
+    if v then do
+        mwhileEnum2 t g f (f g acc)
+    else
+        pure acc
 
 {-
 piff: File -> Enumeration (IO String)
