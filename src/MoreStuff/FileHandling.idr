@@ -96,18 +96,19 @@ mwhile t b = do
 --                    mwhileEnum t g b
 --         False => pure ()
 
-mwhileEnum : (test : IO Bool) -> (get : IO String) ->
+mwhileEnum : Monad m =>
+    (test : m Bool) ->
+    (get : m String) ->
     (fun: String -> acctype -> acctype) ->
     (accstart: acctype) ->
-    IO acctype
+    m acctype
 mwhileEnum t g f acc = do
     v <- t
-    case v of
-        True => do {
-            line <- g
-            mwhileEnum t g f (f line acc)
-        }
-        False => pure acc
+    if v then do
+        line <- g
+        mwhileEnum t g f (f line acc)
+    else
+        pure acc
 
 export
 linesAsEnum: (fileName: String) -> IO (Enumeration String)
