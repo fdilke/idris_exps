@@ -131,20 +131,25 @@ linesAsEnum fileName = do
                         f "bubb" acc
         Left err => pure empty
 
-
-mwhileEnum2 : Monad m => (test : m Bool) ->
-    (get : m inp) ->
-    (fun: m inp -> acctype -> acctype) ->
+{- need to make this function work:
+mwhileEnum2 : Monad m =>
+    (start: m (Either success fail)) ->
+    (end: success -> m ()) ->
+    (test : m Bool) ->
+    (get : success -> m inp) ->
+    (fun: inp -> acctype -> acctype) ->
     (accstart: acctype) ->
     m acctype
-mwhileEnum2 t g f acc = do
-    v <- t
-    if v then do
-        mwhileEnum2 t g f (f g acc)
-    else
-        pure acc
+mwhileEnum2 s e t g f acc = do
+    init <- start
+    case init of
+        Left token => ?xx {- ( do
+            let newacc = mwhileEnum t g f (f line acc)
+            e token
+            newacc ) -}
+        Right failed =>
+            ?pig -- pure acc
 
-{-
 piff: File -> Enumeration (IO String)
 piff h = MkEnumeration $ \f, acc =>
     mwhileEnum2
