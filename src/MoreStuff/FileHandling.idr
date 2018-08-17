@@ -88,27 +88,19 @@ mwhile t b = do
                     mwhile t b
          False => pure ()
 
---mwhileEnum : (test : IO Bool) -> (getter: IO String) -> (body : IO ()) -> IO ()
---mwhileEnum t g b = do
---    v <- t
---    case v of
---         True => do b
---                    mwhileEnum t g b
---         False => pure ()
-
 mwhileEnum : Monad m =>
     (test : m Bool) ->
     (get : m x) ->
-    (fun: x -> acctype -> acctype) ->
-    (accstart: acctype) ->
-    m acctype
-mwhileEnum t g f acc = do
-    v <- t
+    (fun: x -> acc -> acc) ->
+    (a: acc) ->
+    m acc
+mwhileEnum test get fun a = do
+    v <- test
     if v then do
-        line <- g
-        mwhileEnum t g f (f line acc)
+        next <- get
+        mwhileEnum test get fun (fun next a)
     else
-        pure acc
+        pure a
 
 export
 linesAsEnum: (fileName: String) -> IO (Enumeration String)
@@ -131,39 +123,40 @@ linesAsEnum fileName = do
                         f "bubb" acc
         Left err => pure empty
 
-whiff: File -> Enumeration (IO String)
-whiff h = MkEnumeration $ \f, acc =>
---    let x = mwhileEnum
--- test
---         f
---         (pure acc) in
-     let
-        x = 2
-        y = 3
-        test = (do {
-             x <- fEOF h
-             pure (not x) })
---        get = 2 in
---        get = (fGetLine h) in
-        qt: IO Int = (do {
+linesAsEnum2: (fileName: String) -> IO (Enumeration String)
+linesAsEnum2 fileName = do
+    Right h <- openFile fileName Read
+    let ppp = mwhileEnum
+        (do
+            x <- fEOF h
+            pure (not x) )
+        (do
             Right l <- fGetLine h
-            pure 7
-        })
-        qq: IO Int = (do {
-            buzz <- fGetLine h
-            case buzz of
-                Left err => pure 1
-                Right l => pure 3
-                _ => pure 7
-        }) in
---        p = 8 in
---        get = (case (fGetLine h) of
---            Right l => 3
---            Left k => 1
---        ) in
---        get = (do { {- Right -} l <- fGetLine h
---                pure l }) in
-        ?xx
+            pure l )
+        (\txt : String, n : Int => n+1)
+        0
+    closeFile h
+    pure $ MkEnumeration $ \f, acc =>
+                f "bubb" acc
+
+whiff: File -> Enumeration (IO String)
+whiff h = MkEnumeration doFold where
+    doFold: { acc: Type } ->
+        (f : IO String -> acc -> acc) ->
+        (init : acc) ->
+        acc
+    doFold { acc } f a =
+         let
+            test: IO Bool = (do {
+                 x <- fEOF h
+                 pure (not x) })
+            get: IO String = (do {
+                Right l <- fGetLine h
+                pure l
+            })
+            fing: IO acc = mwhileEnum test (pure get) f a
+            p = 8 in
+            ?xx
 
 batch: File -> IO Int
 batch h = do
