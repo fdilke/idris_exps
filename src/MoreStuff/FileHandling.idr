@@ -46,17 +46,14 @@ testFile = do
     close
     putStrLn (show !(Count :- get))
 
-loadLines: (Either FileError String) -> Maybe (List String)
-loadLines (Left error) = Nothing
-loadLines (Right text) = Just (lines text)
-
 export
 loadFile: (fileName: String) -> IO (Maybe (List String))
 loadFile fileName = do
     contents <- readFile fileName
-    pure $ loadLines contents
-
---    run (effLoadFile fileName)
+    pure $
+        case contents of
+            (Left error) => Nothing
+            (Right text) => Just (lines text)
 
 -- split out 'monadic stateful while' as a separate utility?
 mwhile : (test : IO Bool) -> (body : IO ()) -> IO ()
