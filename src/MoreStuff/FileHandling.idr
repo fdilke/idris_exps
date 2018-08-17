@@ -131,6 +131,58 @@ linesAsEnum fileName = do
                         f "bubb" acc
         Left err => pure empty
 
+whiff: File -> Enumeration (IO String)
+whiff h = MkEnumeration $ \f, acc =>
+--    let x = mwhileEnum
+-- test
+--         f
+--         (pure acc) in
+     let
+        x = 2
+        y = 3
+        test = (do {
+             x <- fEOF h
+             pure (not x) })
+--        get = 2 in
+--        get = (fGetLine h) in
+        qt: IO Int = (do {
+            Right l <- fGetLine h
+            pure 7
+        })
+        qq: IO Int = (do {
+            buzz <- fGetLine h
+            case buzz of
+                Left err => pure 1
+                Right l => pure 3
+                _ => pure 7
+        }) in
+--        p = 8 in
+--        get = (case (fGetLine h) of
+--            Right l => 3
+--            Left k => 1
+--        ) in
+--        get = (do { {- Right -} l <- fGetLine h
+--                pure l }) in
+        ?xx
+
+batch: File -> IO Int
+batch h = do
+    buzz <- fGetLine h
+    case buzz of
+        Left err => pure 1
+        Right l => pure 3
+
+
+botch: Int
+botch = let
+    t = (
+        case 7 of
+            1 => 3
+            8 => 1
+    ) in
+        t
+
+
 {- need to make this function work:
 mwhileEnum2 : Monad m =>
     (start: m (Either success fail)) ->
@@ -143,10 +195,11 @@ mwhileEnum2 : Monad m =>
 mwhileEnum2 s e t g f acc = do
     init <- start
     case init of
-        Left token => ?xx {- ( do
-            let newacc = mwhileEnum t g f (f line acc)
-            e token
-            newacc ) -}
+        Left token => ?xx
+        -- ( do
+        --    let newacc = mwhileEnum t g f (f line acc)
+--            e token
+--            newacc )
         Right failed =>
             ?pig -- pure acc
 
