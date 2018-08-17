@@ -2,6 +2,7 @@ module SpecTests.SpecIOTests
 
 import SpecTests.NoddyTests
 import SpecTests.CollatzTests
+import SpecTests.AcrosticTests
 import SpecTests.FileHandlingTests
 import SpecTests.EnumerationTests
 import Specdris.SpecIO
@@ -15,3 +16,4 @@ specIOTests = specIO $
        basicTests
        fileHandlingTests
        enumerationTests
+       acrosticTests

@@ -35,10 +35,22 @@ dumpFile fn = do { Right h <- openFile fn Read
                           (do { Right l <- fGetLine h
                                 putStr l })
                    closeFile h }
-
+{-
 main : IO ()
 main = do
   dumpFile "/tmp/botch.txt"
+  pure ()
+-}
+
+findAcrostics : List String -> IO ()
+findAcrostics words = do
+    putStr $ (show (length words) ++ " words!!")
+
+main : IO ()
+main = do
+  text <- loadFile2 "src/resources/ThreeLetterWords.txt"
+  case text of
+    Just lines => findAcrostics (trim <$> lines)
   pure ()
 
 

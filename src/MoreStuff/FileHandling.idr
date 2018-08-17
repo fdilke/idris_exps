@@ -79,6 +79,27 @@ mwhileEnum test get fun a = do
         pure a
 
 export
+loadFile2: (fileName: String) -> IO (Maybe (List String))
+loadFile2 fileName = do
+    file <- openFile fileName Read
+    case file of
+        Right h => do
+            ppp <- mwhileEnum
+                (do
+                    x <- fEOF h
+--                    putStr "ZZZ 2"
+                    pure (not x) )
+                (do
+                    Right l <- fGetLine h
+--                    putStr "ZZZ 1"
+                    pure l )
+                (\txt : String, n : List String => txt :: n)
+                []
+            closeFile h
+            pure $ Just ppp
+        Left err => pure Nothing
+
+export
 linesAsEnum: (fileName: String) -> IO (Enumeration String)
 linesAsEnum fileName = do
     file <- openFile fileName Read
