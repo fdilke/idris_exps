@@ -46,27 +46,6 @@ testFile = do
     close
     putStrLn (show !(Count :- get))
 
--- Eff (List String) [SELECT]
--- Eff () [FILE (), STDIO, Count ::: STATE Int]
--- TestFileIO () ()
--- effLoadFile: (fileName: String) -> Eff (List String) [SELECT]
-
-effLoadFile: (fileName: String) -> Eff (List String) [FILE (), STDIO, Count ::: STATE Int]
-effLoadFile fileName = pure [ "Um, dunno" ]
--- effLoadFile col qs = do row <- select (rowsIn col qs)
---                      addQueens (col - 1) ((row, col) :: qs)
-
-{-
-sampleMain : IO ()
-sampleMain = run testFile
-
-
-export
-loadFile: (fileName: String) -> Maybe (List String)
-loadFile fileName = Just [ "todo: fix this!" ]
--- want to replace it by other, which returns IO x not Maybe x:
--}
-
 loadLines: (Either FileError String) -> Maybe (List String)
 loadLines (Left error) = Nothing
 loadLines (Right text) = Just (lines text)
@@ -123,10 +102,42 @@ linesAsEnum fileName = do
                         f "bubb" acc
         Left err => pure empty
 
+{-
+mwhileEnum2 : Monad m =>
+    (test : m Bool) ->
+    (get : m x) ->
+    (fun: x -> acc -> acc) ->
+    (a: m acc) ->
+    m acc
+mwhileEnum2 test get fun a = do
+    v <- test
+    if v then do
+        next <- get
+        mwhileEnum2 test get fun (map (fun next) a)
+    else
+        a
+
+export
 linesAsEnum2: (fileName: String) -> IO (Enumeration String)
 linesAsEnum2 fileName = do
     Right h <- openFile fileName Read
     let ppp = mwhileEnum
+        (do
+            x <- fEOF h
+            pure (not x) )
+        (do
+            Right l <- fGetLine h
+            pure l )
+        (\txt : String, n : Int => n+1)
+        0
+    closeFile h
+    pure $ MkEnumeration $ \f, acc =>
+                f "bubb" acc
+
+linesAsEnum3: (fileName: String) -> IO (Enumeration String)
+linesAsEnum3 fileName = do
+    Right h <- openFile fileName Read
+    let ppp: IO Int = mwhileEnum
         (do
             x <- fEOF h
             pure (not x) )
@@ -175,75 +186,6 @@ botch = let
     ) in
         t
 
-
-{- need to make this function work:
-mwhileEnum2 : Monad m =>
-    (start: m (Either success fail)) ->
-    (end: success -> m ()) ->
-    (test : m Bool) ->
-    (get : success -> m inp) ->
-    (fun: inp -> acctype -> acctype) ->
-    (accstart: acctype) ->
-    m acctype
-mwhileEnum2 s e t g f acc = do
-    init <- start
-    case init of
-        Left token => ?xx
-        -- ( do
-        --    let newacc = mwhileEnum t g f (f line acc)
---            e token
---            newacc )
-        Right failed =>
-            ?pig -- pure acc
-
-piff: File -> Enumeration (IO String)
-piff h = MkEnumeration $ \f, acc =>
-    mwhileEnum2
-         (do {
-               x <- fEOF h
-               pure (not x) })
-         (do { Right l <- fGetLine h
-               pure l })
-         f
-         (pure acc)
-
-
--- mwhileEnum3 : (test : IO Bool) -> (get : IO inp) -> (fun: inp -> acctype -> acctype) -> (accstart: acctype) -> IO acctype
--- mwhileEnum3 t g f acc = do
---    v <- t
---    case v of
---        True => do {
---            line <- g
---            mwhileEnum3 t g f (f line acc)
---        }
---        False => pure acc
-
-
-
-enumTheLines: File -> (func : String -> acc -> acc) -> (init : acc) -> IO acc
-enumTheLines h f a =
-    pure a -- do this properly
-
-pest: File -> IO (Enumeration String)
-pest h = MkEnumeration $ \f, acc =>
-    mwhileEnum
-        (do {
-              x <- fEOF h
-              pure (not x) })
-        (do { Right l <- fGetLine h
-              pure l })
-        f
-        acc
-
-
-whinesAsEnum: (fileName: String) -> IO (Enumeration String)
-whinesAsEnum fileName = do
-    file <- openFile fileName Read
-    let ans = case file of
-        Right h => piff h
-        Left err => pure empty
-    closeFile h
-    pure ans
 
 the problem: We have to return an IO (Enumeration String)
 Or an Enumeration (IO String) would do, then apply sequence
