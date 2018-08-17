@@ -4,8 +4,9 @@ export
 wordsDown : Int -> List String -> List String -> Bool
 wordsDown length dictionary rows =
     all wordAtColumn [0..(length - 1)] where
-    wordAtColumn col = let
-        letters = (\word => strIndex word col) <$> rows
+    wordAtColumn column = let
+        nth = \word => strIndex word column
+        letters = nth <$> rows
         column = pack letters in
             elem column dictionary
 
