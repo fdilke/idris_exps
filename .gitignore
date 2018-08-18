@@ -9,6 +9,9 @@ idris_exps
 # Binary targets
 src/target
 
+# Scratch files
+scratch/
+
 # Output binaries
 run
 run-tests
