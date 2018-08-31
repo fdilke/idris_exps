@@ -1,7 +1,6 @@
 module Main
 
 import Lib
-import MoreStuff.FileHandling
 import MoreStuff.Acrostic
 
 {-
@@ -43,25 +42,6 @@ main = do
   pure ()
 -}
 
-findAcrostics : List String -> IO ()
-findAcrostics words = do
-    putStr $ (show (length words) ++ " words!!")
-    let triples = [ (w1, w2, w3) |
-        w1 <- words,
-        w2 <- words,
-        w3 <- words,
-        wordsDown 3 words [ w1, w2, w3 ]
-    ]
-    putStr $ show triples
-
 main : IO ()
-main = do
-  text <- loadFile2 "src/resources/ThreeLetterWords.txt"
-  case text of
-    Just lines => let
-        trimmedLines = ((toUpper . trim) <$> lines)
-        words = [ word | word <- trimmedLines, length word == 3 ] in
-        findAcrostics words
-  pure ()
-
+main = doAcrostics
 
