@@ -2,6 +2,7 @@ module MoreStuff.Acrostic
 
 import MoreStuff.FileHandling
 
+export
 wordsDown : Int -> List String -> List String -> Bool
 wordsDown length dictionary rows =
     all wordAtColumn [0..(length - 1)] where
