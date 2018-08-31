@@ -24,7 +24,7 @@ buildEquiv len relators = let
             yy = trackUp y in
             classes where
                 trackUp: Fin len -> Fin len
-                trackUp j = index j classes
+                trackUp = iterateToFixed $ \j => index j classes
 {-
             classes where
                 trackUp: Int -> Int

@@ -15,8 +15,6 @@ graphAlgoTests = let
     xxx = 3
     yyy = "Holloe" in
     describe "Graph algorithms" $ do
---        it "bob-a-job" $ do
---            0 `shouldBe` 0
         describe "Iterate-to-fixed works for ..." $ do
             it "a countdown to 0" $ do
                 let conditionalDec = \n: Int =>
