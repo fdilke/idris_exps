@@ -21,6 +21,10 @@ How to help the typechecker with type variables?
 
 seems to not really work, e.g. trying to abstract
 String from monadicWhile :( It must be possible.
+Solved this in the end, not sure how. Perhaps you just have to
+give the typechecker a bit more help. e.g.
+ 
+    x : Int -> List Int = xx. or {t=Int} ...?
 
 # All these questions
 

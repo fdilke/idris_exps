@@ -5,6 +5,7 @@ import SpecTests.CollatzTests
 import SpecTests.AcrosticTests
 import SpecTests.FileHandlingTests
 import SpecTests.EnumerationTests
+import SpecTests.GraphAlgoTests
 import Specdris.SpecIO
 
 export
@@ -17,3 +18,4 @@ specIOTests = specIO $
        fileHandlingTests
        enumerationTests
        acrosticTests
+       graphAlgoTests
