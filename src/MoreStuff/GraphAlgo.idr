@@ -13,4 +13,6 @@ export
 buildEquiv: Int -> List (Int, Int) -> List Int
 buildEquiv size relators = let
     range = [0,1..(size-1)] in
-        range
+--        range
+    foldr f range relators where
+        f (x, y) classes = classes
