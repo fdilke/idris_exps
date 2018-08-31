@@ -10,6 +10,12 @@ graphAlgoTests = let
     t = 0
     u = 7
     list = [1,2,3] in
+    describe "Graph algorithms" $ do
+        describe "Iterate-to-fixed works for ..." $ do
+            it "a countdown to 0" $ do
+                let conditionalDec = \n: Int =>
+                    if (n > 0) then (n - 1) else n
+                iterateToFixed 6 conditionalDec `shouldBe` 0
         describe "Calculating equivalence relations works for ..." $ do
             it "an empty set" $ do
                 buildEquiv 0 [] `shouldBe` []
