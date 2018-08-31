@@ -10,27 +10,28 @@ iterateToFixed fun arg =
     let farg = fun arg in
     if (farg == arg) then farg else iterateToFixed fun farg
 
+trackUp: Vect len (Fin len) -> Fin len -> Fin len
+trackUp classes = iterateToFixed $ \i => index i classes
+
+sweep: Vect len (Fin len) -> Vect len (Fin len)
+sweep classes =
+    (trackUp classes) <$> classes
+
+-- todo: rework 'sweep' to use foldr and replace one index at a time
+
 ||| Build an equivalence relation from a list of pairs of integers in the range 0 to n.
 ||| Result is expressed as a list of indices representing equivalence classes.
 export
 buildEquiv: (len: Nat) -> List (Fin len, Fin len) -> Vect len (Fin len)
 buildEquiv len relators = let
     base: Vect len (Fin len) = range in
---        range
-    foldr f base relators where
-        f (x, y) classes = let
---            trackUp = \i: Int => i
-            xx = trackUp x
-            yy = trackUp y in
-            classes where
-                trackUp: Fin len -> Fin len
-                trackUp = iterateToFixed $ \j => index j classes
-{-
-            classes where
-                trackUp: Int -> Int
-                trackUp j = index (the Nat j) range
---                trackUp j = index (cast j) range
-                -- (\n: Int => index (cast n) range) j
-                -- iterateToFixed
-
--}
+    sweep $ foldr merge base relators where
+        merge (x, y) classes = let
+            xx = trackUp classes x
+            yy = trackUp classes y in
+            equate xx yy where
+                equate: Fin len -> Fin len -> Vect len (Fin len)
+                equate p q = if (p == q) then
+                    classes
+                else
+                    replaceAt p q classes
