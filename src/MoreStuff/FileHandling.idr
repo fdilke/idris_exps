@@ -47,8 +47,8 @@ testFile = do
     putStrLn (show !(Count :- get))
 
 export
-loadFile: (fileName: String) -> IO (Maybe (List String))
-loadFile fileName = do
+oldloadFile: (fileName: String) -> IO (Maybe (List String))
+oldloadFile fileName = do
     contents <- readFile fileName
     pure $
         case contents of
@@ -78,25 +78,26 @@ mwhileEnum test get fun a = do
     else
         pure a
 
+rtrim : String -> String
+rtrim xs = reverse (ltrim (reverse xs))
+
 export
-loadFile2: (fileName: String) -> IO (Maybe (List String))
-loadFile2 fileName = do
+loadFile: (fileName: String) -> IO (Maybe (List String))
+loadFile fileName = do
     file <- openFile fileName Read
     case file of
         Right h => do
             ppp <- mwhileEnum
                 (do
                     x <- fEOF h
---                    putStr "ZZZ 2"
                     pure (not x) )
                 (do
                     Right l <- fGetLine h
---                    putStr "ZZZ 1"
-                    pure l )
-                (\txt : String, n : List String => txt :: n)
+                    pure (rtrim l) )
+                (\txt : String, list : List String => txt :: list)
                 []
             closeFile h
-            pure $ Just ppp
+            pure $ Just $ reverse ppp
         Left err => pure Nothing
 
 export
