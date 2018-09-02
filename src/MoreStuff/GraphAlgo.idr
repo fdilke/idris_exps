@@ -23,9 +23,8 @@ sweep classes =
 ||| Result is expressed as a list of indices representing equivalence classes.
 export
 buildEquiv: (len: Nat) -> List (Fin len, Fin len) -> Vect len (Fin len)
-buildEquiv len relators = let
-    base: Vect len (Fin len) = range in
-    sweep $ foldr merge base relators where
+buildEquiv len relators =
+    sweep $ foldr merge range relators where
         merge (x, y) classes = let
             xx = trackUp classes x
             yy = trackUp classes y in
