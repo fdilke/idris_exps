@@ -30,7 +30,34 @@ graphAlgoTests = let
                 buildEquiv 2 [] `shouldBe` [0,1]
             it "a doubleton with only trivial relators" $ do
                 buildEquiv 2 [(0, 0), (1, 1)] `shouldBe` [0,1]
---            it "a doubleton, equating its elements" $ do
---                buildEquiv 2 [(0, 1)] `shouldBe` []
+            it "a doubleton, equating its elements" $ do
+                buildEquiv 2 [(0, 1)] `shouldBe` [1,1]
+            it "a nontrivial example" $ do
+                buildEquiv 4 [(1, 2)] `shouldBe` [0,2,2,3]
+            it "a bigger example" $ do
+                buildEquiv 6 [(1, 2), (2, 3)] `shouldBe` [0,3,3,3,4,5]
+            it "a yet bigger example" $ do
+                buildEquiv 10 [
+                    (1, 2), (7, 0), (4, 3), (3, 7), (6, 5), (9, 5)
+                ] `shouldBe` [
+                    0, 2, 2, 0, 0, 5, 5, 0, 8, 5
+                ]
+            it "a formerly problematic example" $ do
+                buildEquiv 4 [
+                    (2, 0), (3, 1), (2, 2), (3, 3), (1, 3), (0, 2), (2, 2), (3, 3)
+                ] `shouldBe` [
+                    2, 3, 2, 3
+                    -- not 0, 1, 0, 1 ?
+                ]
+            it "another formerly problematic example" $ do
+                buildEquiv 4 [
+                    (0, 0),(0, 1),(0, 2),(0, 3),(1, 0),(1, 1),(1, 2),(1, 3),(2, 0),
+                    (2, 1),(2, 2),(2, 3),(3, 0),(3, 1),(3, 2),(3, 3)
+                ] `shouldBe` [
+                    0, 0, 0, 0
+                    -- not 3, 3, 3, 3 ?
+                ]
+
+
 
 
