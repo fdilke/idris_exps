@@ -8,10 +8,12 @@ export
 iterateToFixed: Eq a => (a -> a) -> a -> a
 iterateToFixed fun arg =
     let farg = fun arg in
-    if (farg == arg) then farg else iterateToFixed fun farg
+    if (farg == arg) then farg else
+        iterateToFixed fun farg
 
 trackUp: Vect len (Fin len) -> Fin len -> Fin len
-trackUp classes = iterateToFixed $ \i => index i classes
+trackUp classes =
+    iterateToFixed (`index` classes)
 
 sweep: Vect len (Fin len) -> Vect len (Fin len)
 sweep classes =
