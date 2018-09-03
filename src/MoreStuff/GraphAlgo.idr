@@ -17,8 +17,6 @@ sweep: Vect len (Fin len) -> Vect len (Fin len)
 sweep classes =
     (trackUp classes) <$> classes
 
--- todo: rework 'sweep' to use foldr and replace one index at a time
-
 ||| Build an equivalence relation from a list of pairs of integers in the range 0 to n.
 ||| Result is expressed as a list of indices representing equivalence classes.
 export
@@ -28,9 +26,7 @@ buildEquiv len relators =
         merge (x, y) classes = let
             xx = trackUp classes x
             yy = trackUp classes y in
-            equate xx yy where
-                equate: Fin len -> Fin len -> Vect len (Fin len)
-                equate p q = if (p == q) then
-                    classes
-                else
-                    replaceAt p q classes
+            if (xx == yy) then
+                classes
+            else
+                replaceAt xx yy classes
