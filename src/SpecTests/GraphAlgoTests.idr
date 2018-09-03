@@ -55,9 +55,13 @@ graphAlgoTests = let
                 ] `shouldBe` [
                     3, 3, 3, 3
                 ]
-        describe "Detecting forests ..." $ do
-            it "works for an empty set" $ do
+        describe "Detecting forests works for ..." $ do
+            it "an empty set" $ do
                 isForest (the (List (Int, Int)) []) `shouldBe` True
+            it "a single edge" $ do
+                isForest [(1, 2)] `shouldBe` True
+            it "a single loop" $ do
+                isForest [(1, 1)] `shouldBe` False
 
 
 

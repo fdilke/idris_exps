@@ -35,6 +35,13 @@ buildEquiv len relators =
 
 ||| Tell if a graph (expressed as list of edges) is a forest, i.e. has no cycles
 export
-isForest: List (a, a) -> Bool
+isForest: Eq a => List (a, a) -> Bool
 isForest [] = True
-isForest ((x, y) :: rest) = True
+isForest ((x, y) :: edges) =
+    if (x == y) then
+        False
+    else
+        isForest (map bond edges) where
+            bond: (a, a) -> (a, a)
+            bond (p, q) = (p, q)
+            -- bond t = t -- (p, q) = (p, q)
