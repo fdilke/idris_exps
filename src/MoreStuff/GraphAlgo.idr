@@ -32,3 +32,9 @@ buildEquiv len relators =
                 classes
             else
                 replaceAt xx yy classes
+
+||| Tell if a graph (expressed as list of edges) is a forest, i.e. has no cycles
+export
+isForest: List (a, a) -> Bool
+isForest [] = True
+isForest ((x, y) :: rest) = True

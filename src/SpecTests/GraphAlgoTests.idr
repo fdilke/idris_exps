@@ -55,6 +55,9 @@ graphAlgoTests = let
                 ] `shouldBe` [
                     3, 3, 3, 3
                 ]
+        describe "Detecting forests ..." $ do
+            it "works for an empty set" $ do
+                isForest (the (List (Int, Int)) []) `shouldBe` True
 
 
 
