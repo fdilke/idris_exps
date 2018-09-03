@@ -64,6 +64,12 @@ graphAlgoTests = let
                 hasCycle [(1, 1)] `shouldBe` True
             it "a pair of complementary edges" $ do
                 hasCycle [(1, 2), (2, 1)] `shouldBe` True
+            it "a more complex tree" $ do
+                hasCycle [(0, 4), (1, 4), (2, 4), (4, 5), (4, 6)] `shouldBe` False
+            it "a yet more complex tree" $ do
+                hasCycle [(0, 1), (2, 3), (4, 5), (1, 3), (5, 2)] `shouldBe` False
+            it "a yet more complex graph with cycle" $ do
+                hasCycle [(0, 1), (2, 3), (4, 5), (1, 3), (5, 2), (0, 4)] `shouldBe` True
 
 
 
