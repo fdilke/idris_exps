@@ -62,6 +62,8 @@ graphAlgoTests = let
                 isForest [(1, 2)] `shouldBe` True
             it "a single loop" $ do
                 isForest [(1, 1)] `shouldBe` False
+            it "a pair of complementary edges" $ do
+                isForest [(1, 2), (2, 1)] `shouldBe` False
 
 
 

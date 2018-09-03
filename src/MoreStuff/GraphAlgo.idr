@@ -41,7 +41,8 @@ isForest ((x, y) :: edges) =
     if (x == y) then
         False
     else
-        isForest (map bond edges) where
-            bond: (a, a) -> (a, a)
-            bond (p, q) = (p, q)
-            -- bond t = t -- (p, q) = (p, q)
+        isForest (map bond2 edges) where
+            bond: a -> a
+            bond p = if (p == x) then y else p
+            bond2: (a, a) -> (a, a)
+            bond2 (p, q) = (bond p, bond q)
