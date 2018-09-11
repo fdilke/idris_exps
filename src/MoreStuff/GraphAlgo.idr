@@ -2,6 +2,7 @@ module MoreStuff.GraphAlgo
 
 import Data.Fin
 import Data.Vect
+import Data.SortedMap
 
 ||| Iterate a function on an argument until the result stabilizes
 export
@@ -46,3 +47,14 @@ hasCycle ((x, y) :: edges) =
             bond p = if (p == x) then y else p
             bond2: (a, a) -> (a, a)
             bond2 (p, q) = (bond p, bond q)
+
+-- ||| Join two nodes in the context of a disjoint set, expressed as a (SortedMap a a)
+-- ||| Return an additional flag saying if the nodes were already joined
+parameters (dset: SortedMap a a)
+    export
+    join: a -> a -> (Bool, SortedMap a a)
+    join x y = case (lookup x dset, lookup y dset) of
+        (Just xx, Just yy) => (True, dset)
+        _ => (False, dset)
+
+

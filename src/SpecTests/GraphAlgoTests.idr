@@ -5,9 +5,16 @@ import Specdris.Spec
 import Specdris.Expectations
 import Data.Fin
 import Data.Vect
+import Data.SortedMap
 
 Show (Fin len) where
     show = show . finToNat
+
+(Show k, Show v) => Show (SortedMap k v) where
+    show = show . toList
+
+(Eq k, Eq v) => Eq (SortedMap k v) where
+    (==) xs ys = (toList xs) == (toList ys)
 
 export
 graphAlgoTests: SpecTree
@@ -70,6 +77,12 @@ graphAlgoTests = let
                 hasCycle [(0, 1), (2, 3), (4, 5), (1, 3), (5, 2)] `shouldBe` False
             it "a yet more complex graph with cycle" $ do
                 hasCycle [(0, 1), (2, 3), (4, 5), (1, 3), (5, 2), (0, 4)] `shouldBe` True
+        describe "Joining disjoint sets works for ..." $ do
+            let sortedMap = Data.SortedMap.fromList
+            it "an empty set" $ do
+                let set = sortedMap [(1, 1), (2, 1)]
+                join set 1 2 `shouldBe` (True, set)
+                -- let expected = sortedMap [(1, 1), (2, 2), (3, 2)]
 
 
 
