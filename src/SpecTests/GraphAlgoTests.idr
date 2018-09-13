@@ -102,6 +102,10 @@ graphAlgoTests = let
                 let set = sortedMap [(1, 1)]
                 let expected = sortedMap [(1, 1), (2, 1)]
                 join set 2 1  `shouldBe` (False, expected)
+        describe "Spanning tree algorithm works for ..." $ do
+            it "an empty graph" $ do
+                let graph: List (Int, Int) = []
+                spanningTree graph `shouldBe` graph
 
 
 

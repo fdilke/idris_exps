@@ -68,3 +68,11 @@ parameters (dset: SortedMap a a)
         (Just xx, Nothing) => (False, insert y xx dset)
         (Nothing, Just yy) => (False, insert x yy dset)
 
+||| Find a spanning tree of a set of edges using Kruskal's algorithm'
+export
+spanningTree: Ord a => List (a, a) -> List (a, a)
+spanningTree edges = let
+--    x = 1 in
+--    pigg: List Int = the (List Int) [] in
+    dset: (SortedMap a a) = Data.SortedMap.fromList [] in
+    edges
