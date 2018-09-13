@@ -60,6 +60,10 @@ parameters (dset: SortedMap a a)
     join: Eq a => a -> a -> (Bool, SortedMap a a)
     join x y = case (root x, root y) of
         (Nothing, Nothing) => (x == y, insert x x (insert y y dset))
-        (Just xx, Just yy) => if (xx == yy) then (True, dset) else ?mole
+        (Just xx, Just yy) =>
+            if (xx == yy) then
+                (True, dset)
+            else
+                (False, insert x y dset)
         _ => ?hole
 

@@ -90,6 +90,10 @@ graphAlgoTests = let
             it "equal existing nodes on an inhabited set" $ do
                 let set = sortedMap [(1, 2), (2, 2)]
                 join set 1 1 `shouldBe` (True, set)
+            it "unequal existing nodes on an inhabited set" $ do
+                let set = sortedMap [(1, 1), (2, 2)]
+                let expected = sortedMap [(1, 2), (2, 2)]
+                join set 1 2  `shouldBe` (False, expected)
 
 
 
