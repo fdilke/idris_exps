@@ -18,9 +18,7 @@ Show (Fin len) where
 
 export
 graphAlgoTests: SpecTree
-graphAlgoTests = let
-    xxx = 3
-    yyy = "Holloe" in
+graphAlgoTests =
     describe "Graph algorithms" $ do
         describe "Iterate-to-fixed works for ..." $ do
             it "a countdown to 0" $ do
@@ -94,6 +92,9 @@ graphAlgoTests = let
                 let set = sortedMap [(1, 1), (2, 2)]
                 let expected = sortedMap [(1, 2), (2, 2)]
                 join set 1 2  `shouldBe` (False, expected)
+            it "nodes already joined" $ do
+                let set = sortedMap [(1, 2), (2, 2)]
+                join set 2 1  `shouldBe` (True, set)
             it "an existing node and a new one on an inhabited set" $ do
                 let set = sortedMap [(1, 1)]
                 let expected = sortedMap [(1, 1), (2, 1)]
@@ -105,8 +106,11 @@ graphAlgoTests = let
         describe "Spanning tree algorithm works for ..." $ do
             it "an empty graph" $ do
                 let graph: List (Int, Int) = []
-                spanningTree graph `shouldBe` graph
-
-
-
-
+                spanningForest graph `shouldBe` graph
+            it "a one edge graph" $ do
+                let graph: List (Int, Int) = [(1, 2)]
+                spanningForest graph `shouldBe` graph
+--            it "a bi-gon" $ do
+--                let graph: List (Int, Int) = [(1, 2), (2, 1)]
+--                let expected: List (Int, Int) = [(1, 2)]
+--                spanningForest graph `shouldBe` expected
