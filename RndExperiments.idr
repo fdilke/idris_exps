@@ -1,4 +1,4 @@
-module FileExperiments
+module RndExperiments
 
 import Effects
 import Effect.State
@@ -7,10 +7,10 @@ import Effect.Random
 import Effect.System
 import Control.IOExcept
 
-TestRnd : Type -> Type -> Type
-TestRnd st t = Eff t [RND, STDIO, SYSTEM]
+TestRnd : Type -> Type
+TestRnd t = Eff t [RND, STDIO, SYSTEM]
 
-testRandom : TestRnd () ()
+testRandom : TestRnd ()
 testRandom = do
     seed <- time
     srand seed
@@ -18,4 +18,6 @@ testRandom = do
     putStrLn (show value)
 
 main : IO ()
-main = run testRandom
+main = do run testRandom
+--    sequence $ map (\_ => run testRandom) [0..10]
+--    pure ()
