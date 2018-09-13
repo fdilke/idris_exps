@@ -79,13 +79,17 @@ graphAlgoTests = let
                 hasCycle [(0, 1), (2, 3), (4, 5), (1, 3), (5, 2), (0, 4)] `shouldBe` True
         describe "Joining disjoint sets works for ..." $ do
             let sortedMap = Data.SortedMap.fromList
-            it "an empty set" $ do
+            it "equal nodes on an empty set" $ do
                 let set = sortedMap $ the (List (Int, Int)) []
                 let expected = sortedMap [(1, 1)]
                 join set 1 1 `shouldBe` (True, expected)
-                -- let expected = sortedMap [(1, 1), (2, 2), (3, 2)]
-                -- let set = sortedMap [(1, 1), (2, 1)]
-                -- let set = sortedMap $ the (List Int) []
+            it "unequal nodes on an empty set" $ do
+                let set = sortedMap $ the (List (Int, Int)) []
+                let expected = sortedMap [(1, 1), (2, 2)]
+                join set 1 2 `shouldBe` (False, expected)
+            it "equal existing nodes on an inhabited set" $ do
+                let set = sortedMap [(1, 2), (2, 2)]
+                join set 1 1 `shouldBe` (True, set)
 
 
 
