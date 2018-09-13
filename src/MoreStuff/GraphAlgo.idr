@@ -65,5 +65,6 @@ parameters (dset: SortedMap a a)
                 (True, dset)
             else
                 (False, insert x y dset)
-        _ => ?hole
+        (Just xx, Nothing) => (False, insert y xx dset)
+        (Nothing, Just yy) => (False, insert x yy dset)
 

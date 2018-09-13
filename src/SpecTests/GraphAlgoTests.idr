@@ -94,6 +94,14 @@ graphAlgoTests = let
                 let set = sortedMap [(1, 1), (2, 2)]
                 let expected = sortedMap [(1, 2), (2, 2)]
                 join set 1 2  `shouldBe` (False, expected)
+            it "an existing node and a new one on an inhabited set" $ do
+                let set = sortedMap [(1, 1)]
+                let expected = sortedMap [(1, 1), (2, 1)]
+                join set 1 2  `shouldBe` (False, expected)
+            it "a new node and an existing one on an inhabited set" $ do
+                let set = sortedMap [(1, 1)]
+                let expected = sortedMap [(1, 1), (2, 1)]
+                join set 2 1  `shouldBe` (False, expected)
 
 
 
