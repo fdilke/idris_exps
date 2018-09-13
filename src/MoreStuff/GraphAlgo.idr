@@ -48,13 +48,18 @@ hasCycle ((x, y) :: edges) =
             bond2: (a, a) -> (a, a)
             bond2 (p, q) = (bond p, bond q)
 
--- ||| Join two nodes in the context of a disjoint set, expressed as a (SortedMap a a)
--- ||| Return an additional flag saying if the nodes were already joined
 parameters (dset: SortedMap a a)
-    export
-    join: a -> a -> (Bool, SortedMap a a)
-    join x y = case (lookup x dset, lookup y dset) of
-        (Just xx, Just yy) => (True, dset)
-        _ => (False, dset)
+    root: Eq a => a -> Maybe a
+    root x = iterateToFixed fun (Just x) where
+        fun: Maybe a -> Maybe a
+        fun x = do lookup !x dset
 
+    ||| Join two nodes in the context of a disjoint set, expressed as a (SortedMap a a)
+    ||| Return an additional flag saying if the nodes were already joined
+    export
+    join: Eq a => a -> a -> (Bool, SortedMap a a)
+    join x y = case (root x, root y) of
+        (Nothing, Nothing) => (x == y, insert x x (insert y y dset))
+--        (Just xx, Just yy) => (True, dset)
+        _ => ?hole
 

@@ -80,9 +80,12 @@ graphAlgoTests = let
         describe "Joining disjoint sets works for ..." $ do
             let sortedMap = Data.SortedMap.fromList
             it "an empty set" $ do
-                let set = sortedMap [(1, 1), (2, 1)]
-                join set 1 2 `shouldBe` (True, set)
+                let set = sortedMap $ the (List (Int, Int)) []
+                let expected = sortedMap [(1, 1)]
+                join set 1 1 `shouldBe` (True, expected)
                 -- let expected = sortedMap [(1, 1), (2, 2), (3, 2)]
+                -- let set = sortedMap [(1, 1), (2, 1)]
+                -- let set = sortedMap $ the (List Int) []
 
 
 
