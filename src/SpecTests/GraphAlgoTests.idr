@@ -83,7 +83,7 @@ graphAlgoTests =
                 join set 1 1 `shouldBe` (True, expected)
             it "unequal nodes on an empty set" $ do
                 let set = sortedMap $ the (List (Int, Int)) []
-                let expected = sortedMap [(1, 1), (2, 2)]
+                let expected = sortedMap [(1, 2), (2, 2)]
                 join set 1 2 `shouldBe` (False, expected)
             it "equal existing nodes on an inhabited set" $ do
                 let set = sortedMap [(1, 2), (2, 2)]
@@ -110,7 +110,7 @@ graphAlgoTests =
             it "a one edge graph" $ do
                 let graph: List (Int, Int) = [(1, 2)]
                 spanningForest graph `shouldBe` graph
---            it "a bi-gon" $ do
---                let graph: List (Int, Int) = [(1, 2), (2, 1)]
---                let expected: List (Int, Int) = [(1, 2)]
---                spanningForest graph `shouldBe` expected
+            it "a bi-gon" $ do
+                let graph: List (Int, Int) = [(2, 1), (1, 2)]
+                let expected: List (Int, Int) = [(1, 2)]
+                spanningForest graph `shouldBe` expected
