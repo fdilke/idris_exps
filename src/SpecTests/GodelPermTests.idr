@@ -17,3 +17,6 @@ godelPermTests =
                 godelPerm 0 6 `shouldBe` []
             it "one-element lists" $ do
                 godelPerm 1 3 `shouldBe` [0]
+            it "two-element lists" $ do
+                godelPerm 2 0 `shouldBe` [1, 0]
+                godelPerm 2 1 `shouldBe` [0, 1]
