@@ -19,5 +19,3 @@ testRandom = do
 
 main : IO ()
 main = do run testRandom
---    sequence $ map (\_ => run testRandom) [0..10]
---    pure ()

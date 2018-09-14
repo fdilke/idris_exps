@@ -1,4 +1,4 @@
-module RndList
+module Main
 
 import Effects
 import Effect.State
@@ -7,6 +7,7 @@ import Effect.Random
 import Effect.System
 import Effect.Select
 import Effect.Exception
+import Effect.Monad
 import Control.IOExcept
 
 TestRnd : Type -> Type
@@ -24,6 +25,8 @@ testRandom = (do
 --    let vv = run yy
     handle value 0
     --    sequence (map (handle value) range)
+--    sequence $ map (lift . Effect.StdIO.putStrLn) ["It", "works", "now"]
+    pure ()
     ) where
         handle: Integer -> Int -> Eff () [STDIO]
         handle value i = putStrLn (show value)
