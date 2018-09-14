@@ -20,3 +20,13 @@ godelPermTests =
             it "two-element lists" $ do
                 godelPerm 2 0 `shouldBe` [1, 0]
                 godelPerm 2 1 `shouldBe` [0, 1]
+            it "three-element lists" $ do
+                map (godelPerm 3) [0..5] `shouldBe` [
+                    [2, 1, 0],
+                    [1, 2, 0],
+                    [1, 0, 2],
+                    [2, 0, 1],
+                    [0, 2, 1],
+                    [0, 1, 2]
+                ]
+
