@@ -12,3 +12,10 @@ godelPerm (S n) number = let
     simpler: Vect n (Fin n) = godelPerm n (div number length) in
         insertAt index last $ map weaken simpler
 
+export
+factorial: Nat -> Integer
+factorial n = foldr mul 1 values where
+    values: Vect n Nat
+    values = S . finToNat <$> range
+    mul: Nat -> Integer -> Integer
+    mul m i = (toIntegerNat m) * i

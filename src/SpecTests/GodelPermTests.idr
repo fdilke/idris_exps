@@ -11,8 +11,8 @@ import Helpers.Implementations
 export
 godelPermTests: SpecTree
 godelPermTests =
-    describe "Godel numbered permutations" $ do
-        describe "work for ..." $ do
+    describe "Godel numbered permutations:" $ do
+        describe "The permutations work for ..." $ do
             it "empty lists" $ do
                 godelPerm 0 6 `shouldBe` []
             it "one-element lists" $ do
@@ -29,4 +29,8 @@ godelPermTests =
                     [0, 2, 1],
                     [0, 1, 2]
                 ]
+        describe "factorials" $ do
+            it "work as described" $ do
+                let expected : Vect 3 Integer = [1, 1, 5040]
+                factorial <$> [0, 1, 7] `shouldBe` expected
 

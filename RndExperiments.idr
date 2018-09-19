@@ -6,12 +6,24 @@ import Effect.StdIO
 import Effect.Random
 import Effect.System
 import Control.IOExcept
+import Data.Vect
+
+rndMessage : Eff String [RND, STDIO, SYSTEM]
+rndMessage = do
+    msg <- rndSelect' ["Hello", "Goodbye", "Arriverderci"]
+    pure msg
+
+rndPerm : Vect (S n) a -> Eff (Vect (S n) a) [RND, STDIO, SYSTEM]
+rndPerm {n=n} vs = do
+    pure vs
 
 testRandom : Eff () [RND, STDIO, SYSTEM]
 testRandom = do
     seed <- time
     srand seed
-    value <- rndInt 0 100
+--    value <- rndInt 0 100
+--    value <- rndMessage
+    value <- rndPerm ["Bob", "Hob", "Fob"]
     putStrLn (show value)
 
 main : IO ()
