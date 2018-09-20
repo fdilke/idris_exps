@@ -8,12 +8,12 @@ import Effect.System
 import Control.IOExcept
 import Data.Vect
 
-rndMessage : Eff String [RND, STDIO, SYSTEM]
+rndMessage : Eff String [RND]
 rndMessage = do
     msg <- rndSelect' ["Hello", "Goodbye", "Arriverderci"]
     pure msg
 
-rndPerm : Vect (S n) a -> Eff (Vect (S n) a) [RND, STDIO, SYSTEM]
+rndPerm : Vect (S n) a -> Eff (Vect (S n) a) [RND]
 rndPerm {n=n} vs = do
     pure vs
 
