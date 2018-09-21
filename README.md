@@ -39,3 +39,9 @@ Sophisticated type system. e.g. Can express: two lists have the same length.
 - write the input and output types
 - define function body, guided by structure of input types
 - refine, edit function / type definitions as necessary.
+
+# Actually running the app
+    make install
+    ./idris_exps
+
+    

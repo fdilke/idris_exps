@@ -2,6 +2,7 @@ module Main
 
 import Lib
 import MoreStuff.Acrostic
+import MoreStuff.Maze
 
 {-
 main : IO ()
@@ -43,5 +44,6 @@ main = do
 -}
 
 main : IO ()
-main = doAcrostics
+main = doMaze
+-- doAcrostics
 
