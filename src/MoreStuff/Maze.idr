@@ -40,7 +40,8 @@ showGrid nodes cellfn =
         joinStrings $ map (cellfn i) nodes
     ) nodes
 
-mazeEdges : List Int -> Eff (List ((Int, Int), (Int, Int))) [RND, SYSTEM]
+mazeEdges : List Int ->
+    Eff (List ((Int, Int), (Int, Int))) [RND, SYSTEM]
 mazeEdges nodes = do
     srand !time
     let graph: List ((Int, Int), (Int, Int)) = do
@@ -53,13 +54,33 @@ mazeEdges nodes = do
 
 effectMaze : Eff () [RND, STDIO, SYSTEM]
 effectMaze = do
-    let order = 4
+    let order = 8
     let nodes: List Int = [0..(order-2)]
     edges <- mazeEdges nodes
     putStrLn $ show edges
     let cellPair: (Int -> Int -> String) = \i, j =>
         "<" ++ (show i) ++ "," ++ (show j) ++ ">"
     showGrid nodes cellPair
+    let hFlag = \i : Int, j : Int =>
+        elem ((i, j - 1), (i + 1, j - 1)) edges
+    let vFlag = \i : Int, j : Int =>
+        elem ((i - 1, j), (i - 1, j + 1)) edges
+    let cellFlags: (Int -> Int -> String) = \i, j =>
+        " " ++
+        (if (hFlag i j) then "T" else "F") ++
+        (if (vFlag i j) then "T" else "F")
+    showGrid nodes cellFlags
+    let cellQSquare: (Int -> Int -> String) = \i, j =>
+        case (hFlag i j, vFlag i j) of
+            (False, False) => "▛"
+            (True, False) => "▌"
+            (False, True) => "▀"
+            (True, True) => "▘"
+--            (False, False) => "█"
+--            (True, False) => "▙"
+--            (False, True) => "▜"
+--            (True, True) => "▚"
+    showGrid nodes cellQSquare
     pure ()
 
 export
