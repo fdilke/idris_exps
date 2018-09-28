@@ -31,6 +31,15 @@ shuffle xs = do
 joinStrings: List String -> String
 joinStrings = pack . concat . (map unpack)
 
+showGridder:
+    ((Int -> Int -> String) ->
+    (List Int) ->
+    Eff () [STDIO])
+showGridder cellfn nodes =
+    putStr $ unlines $ map (\i =>
+        joinStrings $ map (cellfn i) nodes
+    ) nodes
+
 generateMaze : Eff () [RND, STDIO, SYSTEM]
 generateMaze = do
     seed <- time
@@ -46,22 +55,10 @@ generateMaze = do
     let edges = spanningForest rgraph
     putStrLn $ show edges
     let k: List (Eff () [STDIO]) = map putStrLn ["Ho", "ho"]
---    let kk: (Eff (List ()) [STDIO]) = sequence k
-    let line : (Int -> String) = \i =>
-        joinStrings $ do
-            j <- nodes
-            pure $ "<" ++ (show i) ++ "," ++ (show j) ++ ">"
---        j <- nodes
---        pure $ "<" ++ (show i) ++ "," ++ (show j) ++ ">"
-    let lines : List String = do
-        i <- nodes
-        pure (line i)
-    putStr $ unlines lines
+    let cellPair: (Int -> Int -> String) = \i, j =>
+        "<" ++ (show i) ++ "," ++ (show j) ++ ">"
+    showGridder cellPair nodes
     pure ()
---    putStrLn $ show (spanningForest fudges)
---    value <- rndPerm ["V", "X", "Y", "Z", "."]
---    putStrLn (show value)
-
 
 
 export
@@ -70,6 +67,7 @@ doMaze = do run generateMaze
 
 
 --- experiments with monadic effects:
+--    let kk: (Eff (List ()) [STDIO]) = sequence k
 
 experiment : MonadEff [RND, STDIO, SYSTEM] ()
 experiment = monadEffT generateMaze
