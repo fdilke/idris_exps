@@ -43,18 +43,18 @@ showGrid nodes cellfn =
 mazeEdges : List Int ->
     Eff (List ((Int, Int), (Int, Int))) [RND, SYSTEM]
 mazeEdges nodes = do
-    srand !time
+--    srand !time
     let graph: List ((Int, Int), (Int, Int)) = do
         i <- nodes
         j <- nodes
-        k <- [((i, j), (i + 1, j)), ((i, j), (i + 1, j))]
+        k <- [((i, j), (i + 1, j)), ((i, j), (i, j + 1))]
         pure k
     rgraph <- shuffle graph
     pure $ spanningForest rgraph
 
 effectMaze : Eff () [RND, STDIO, SYSTEM]
 effectMaze = do
-    let order = 8
+    let order = 3
     let nodes: List Int = [0..(order-2)]
     edges <- mazeEdges nodes
     putStrLn $ show edges

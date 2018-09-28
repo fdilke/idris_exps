@@ -106,3 +106,14 @@ graphAlgoTests =
                 let graph: List (Int, Int) = [(2, 1), (1, 2)]
                 let expected: List (Int, Int) = [(1, 2)]
                 spanningForest graph `shouldBe` expected
+            it "a fancier graph" $ do
+                let graph: List (Int, Int) = [
+                    (0, 1), (2, 3),
+                    (3, 1), (2, 0)
+                ]
+                let expected: List (Int, Int) = [
+                    (0, 1), (2, 3),
+                    (3, 1)
+                ]
+                pendingWith "*** Restore test here"
+                -- spanningForest graph `shouldBe` expected
