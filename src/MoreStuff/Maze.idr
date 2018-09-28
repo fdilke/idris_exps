@@ -40,10 +40,9 @@ showGrid nodes cellfn =
         joinStrings $ map (cellfn i) nodes
     ) nodes
 
-mazeEdges : Eff (List ((Int, Int), (Int, Int))) [RND, SYSTEM]
-mazeEdges = do
+mazeEdges : Int -> Eff (List ((Int, Int), (Int, Int))) [RND, SYSTEM]
+mazeEdges order = do
     srand !time
-    let order = 4
     let nodes: List Int = [0..(order-2)]
     let graph: List ((Int, Int), (Int, Int)) = do
         i <- nodes
@@ -59,13 +58,7 @@ effectMaze = do
     srand seed
     let order = 4
     let nodes: List Int = [0..(order-2)]
-    let graph: List ((Int, Int), (Int, Int)) = do
-        i <- nodes
-        j <- nodes
-        k <- [((i, j), (i + 1, j)), ((i, j), (i + 1, j))]
-        pure k
-    rgraph <- shuffle graph
-    edges <- mazeEdges
+    edges <- mazeEdges order
     putStrLn $ show edges
     let cellPair: (Int -> Int -> String) = \i, j =>
         "<" ++ (show i) ++ "," ++ (show j) ++ ">"
