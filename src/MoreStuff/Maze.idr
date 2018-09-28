@@ -31,17 +31,30 @@ shuffle xs = do
 joinStrings: List String -> String
 joinStrings = pack . concat . (map unpack)
 
-showGridder:
-    ((Int -> Int -> String) ->
+showGrid:
     (List Int) ->
-    Eff () [STDIO])
-showGridder cellfn nodes =
+    (Int -> Int -> String) ->
+    Eff () [STDIO]
+showGrid nodes cellfn =
     putStr $ unlines $ map (\i =>
         joinStrings $ map (cellfn i) nodes
     ) nodes
 
-generateMaze : Eff () [RND, STDIO, SYSTEM]
-generateMaze = do
+mazeEdges : Eff (List ((Int, Int), (Int, Int))) [RND, SYSTEM]
+mazeEdges = do
+    srand !time
+    let order = 4
+    let nodes: List Int = [0..(order-2)]
+    let graph: List ((Int, Int), (Int, Int)) = do
+        i <- nodes
+        j <- nodes
+        k <- [((i, j), (i + 1, j)), ((i, j), (i + 1, j))]
+        pure k
+    rgraph <- shuffle graph
+    pure $ spanningForest rgraph
+
+effectMaze : Eff () [RND, STDIO, SYSTEM]
+effectMaze = do
     seed <- time
     srand seed
     let order = 4
@@ -52,25 +65,23 @@ generateMaze = do
         k <- [((i, j), (i + 1, j)), ((i, j), (i + 1, j))]
         pure k
     rgraph <- shuffle graph
-    let edges = spanningForest rgraph
+    edges <- mazeEdges
     putStrLn $ show edges
-    let k: List (Eff () [STDIO]) = map putStrLn ["Ho", "ho"]
     let cellPair: (Int -> Int -> String) = \i, j =>
         "<" ++ (show i) ++ "," ++ (show j) ++ ">"
-    showGridder cellPair nodes
+    showGrid nodes cellPair
     pure ()
-
 
 export
 doMaze : IO ()
-doMaze = do run generateMaze
-
+doMaze = do run effectMaze
 
 --- experiments with monadic effects:
+--    let k: List (Eff () [STDIO]) = map putStrLn ["Ho", "ho"]
 --    let kk: (Eff (List ()) [STDIO]) = sequence k
 
 experiment : MonadEff [RND, STDIO, SYSTEM] ()
-experiment = monadEffT generateMaze
+experiment = monadEffT effectMaze
 
 exp2 : String -> MonadEff [STDIO] ()
 exp2 s = monadEffT $ do
