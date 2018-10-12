@@ -49,10 +49,11 @@ hasCycle ((x, y) :: edges) =
             bond2 (p, q) = (bond p, bond q)
 
 parameters (dset: SortedMap a a)
+    export
     root: Eq a => a -> Maybe a
     root x = iterateToFixed fun (Just x) where
         fun: Maybe a -> Maybe a
-        fun x = do lookup !x dset
+        fun x = lookup !x dset
 
     ||| Join two nodes in the context of a disjoint set, expressed as a (SortedMap a a)
     ||| Return an additional flag saying if the nodes were already joined

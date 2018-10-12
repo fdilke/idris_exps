@@ -2,6 +2,7 @@
 *.iml
 .idea/
 idris_exps
+prog
 
 # Idris binary files
 *.ibc
