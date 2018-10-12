@@ -65,7 +65,7 @@ parameters (dset: SortedMap a a)
             if (xx == yy) then
                 (True, dset)
             else
-                (False, insert x y dset)
+                (False, insert xx yy dset)
         (Just xx, Nothing) => (False, insert y xx dset)
         (Nothing, Just yy) => (False, insert x yy dset)
 

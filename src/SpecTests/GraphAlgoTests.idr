@@ -109,10 +109,6 @@ graphAlgoTests =
                 set3 === sortedMap [(0, 1), (1, 1), (2, 3), (3, 1)]
                 flag3 === True
             it "a more sophisticated join, backwards" $ do
---                let set = sortedMap [(0, 1), (2, 3), (3, 1)]
---                root set 2 === Nothing
---                root set 0 === Nothing
---                join set 2 0  `shouldBe` (True, set)
                 let (flag0, set0) = join emptyDS 2 0
                 set0 === sortedMap [(2, 0), (0, 0)]
                 flag0 === False
@@ -122,11 +118,11 @@ graphAlgoTests =
                 let (flag2, set2) = join set1 2 3
                 root set1 2 === Just 0
                 root set1 3 === Just 1
-                set2 === sortedMap [(2, 3), (0, 0), (3, 1), (1, 1)] -- shd be [(2, 0), (0, 3), (3, 3), (1, 1)] ??
+                set2 === sortedMap [(2, 0), (0, 1), (3, 1), (1, 1)]
                 flag2 === False
                 let (flag3, set3) = join set2 0 1
-                set3 === sortedMap [(2, 3), (0, 1), (3, 1), (1, 1)] -- shd be [(2, 0), (0, 3), (3, 3), (1, 1)] ???
-                flag3 === False -- ??? shd be True
+                set3 === set2
+                flag3 === True -- ??? shd be True
         describe "Spanning tree algorithm works for ..." $ do
             it "an empty graph" $ do
                 let graph: List (Int, Int) = []
