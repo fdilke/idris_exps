@@ -8,6 +8,7 @@ import Effect.System
 import Effect.Monad
 import Control.IOExcept
 import Data.Vect
+import Data.String
 
 import MoreStuff.GodelPerm
 import MoreStuff.GraphAlgo
@@ -54,7 +55,9 @@ mazeEdges nodes = do
 
 effectMaze : Eff () [RND, STDIO, SYSTEM]
 effectMaze = do
-    let order = 3
+    args <- getArgs
+    let optionalOrder = index' 1 args >>= (parseInteger { a=Int })
+    let order = fromMaybe 3 optionalOrder
     let nodes: List Int = [0..(order-2)]
     edges <- mazeEdges nodes
     putStrLn $ show edges
