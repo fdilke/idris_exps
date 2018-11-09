@@ -37,8 +37,8 @@ showGrid:
     (Int -> Int -> String) ->
     Eff () [STDIO]
 showGrid nodes cellfn =
-    putStr $ unlines $ map (\i =>
-        joinStrings $ map (cellfn i) nodes
+    putStr $ unlines $ map (\j =>
+        joinStrings $ map (\i => cellfn i j) nodes
     ) nodes
 
 mazeEdges : List Int ->
@@ -51,6 +51,8 @@ mazeEdges nodes = do
         k <- [((i, j), (i + 1, j)), ((i, j), (i, j + 1))]
         pure k
     rgraph <- shuffle graph
+--    pure []
+--    pure rgraph
     pure $ spanningForest rgraph
 
 effectMaze : Eff () [RND, STDIO, SYSTEM]
@@ -59,31 +61,32 @@ effectMaze = do
     let optionalOrder = index' 1 args >>= (parseInteger { a=Int })
     let order = fromMaybe 3 optionalOrder
     let nodes: List Int = [0..(order-2)]
+    let nodesPlus: List Int = [0..(order-1)]
     edges <- mazeEdges nodes
     putStrLn $ show edges
     let cellPair: (Int -> Int -> String) = \i, j =>
         "<" ++ (show i) ++ "," ++ (show j) ++ ">"
-    showGrid nodes cellPair
+    showGrid nodesPlus cellPair
     let hFlag = \i : Int, j : Int =>
-        elem ((i, j - 1), (i + 1, j - 1)) edges
+        elem ((i - 1, j), (i, j)) edges
     let vFlag = \i : Int, j : Int =>
-        elem ((i - 1, j), (i - 1, j + 1)) edges
+        elem ((i, j - 1), (i, j)) edges
     let cellFlags: (Int -> Int -> String) = \i, j =>
         " " ++
         (if (hFlag i j) then "T" else "F") ++
         (if (vFlag i j) then "T" else "F")
-    showGrid nodes cellFlags
+    showGrid nodesPlus cellFlags
     let cellQSquare: (Int -> Int -> String) = \i, j =>
         case (hFlag i j, vFlag i j) of
             (False, False) => "▛"
-            (True, False) => "▌"
-            (False, True) => "▀"
+            (True, False) => "▀"
+            (False, True) => "▌"
             (True, True) => "▘"
 --            (False, False) => "█"
 --            (True, False) => "▙"
 --            (False, True) => "▜"
 --            (True, True) => "▚"
-    showGrid nodes cellQSquare
+    showGrid nodesPlus cellQSquare
     pure ()
 
 export
