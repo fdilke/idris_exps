@@ -55,14 +55,28 @@ mazeEdges nodes = do
 --    pure rgraph
     pure $ spanningForest rgraph
 
+mazeEdges2 : List (Int, Int) ->
+    Eff (List ((Int, Int), (Int, Int))) [RND, SYSTEM]
+mazeEdges2 nodePairs = do
+--    srand !time
+    let graph: List ((Int, Int), (Int, Int)) = do
+        (i, ip) <- nodePairs
+        (j, jp) <- nodePairs
+        k <- [((i, j), (ip, j)), ((i, j), (i, jp)), ((ip, j), (ip, jp)), ((i, jp), (ip, jp))]
+        pure k
+    rgraph <- shuffle graph
+    pure $ spanningForest rgraph
+
 effectMaze : Eff () [RND, STDIO, SYSTEM]
 effectMaze = do
     args <- getArgs
     let optionalOrder = index' 1 args >>= (parseInteger { a=Int })
     let order = fromMaybe 3 optionalOrder
     let nodes: List Int = [0..(order-2)]
+    let nodePairs: List (Int, Int) = map ( \i => (i, i + 1)) nodes
     let nodesPlus: List Int = [0..(order-1)]
-    edges <- mazeEdges nodes
+    edges <- mazeEdges2 nodePairs
+--    edges <- mazeEdges nodes
     putStrLn $ show edges
     let cellPair: (Int -> Int -> String) = \i, j =>
         "<" ++ (show i) ++ "," ++ (show j) ++ ">"
