@@ -13,9 +13,17 @@ import Data.String
 import MoreStuff.GodelPerm
 import MoreStuff.GraphAlgo
 
--- qSquare = "▖▗▘▙▚▛▜▝▞▟"
 qSquare: String
 qSquare = " ▘▝▀▖▌▞▛▗▚▐▜▄▙▟█"
+
+squareChar: Bool -> Bool -> Bool -> Bool -> String
+squareChar nw ne sw se =
+    let on: (Bool -> Int -> Int) =
+            \flag, value => if flag then value else 0
+        index = (on nw 1) + (on ne 2) + (on sw 4) + (on se 8)
+        chars: (List Char) = [ strIndex qSquare index ]
+        text: String = pack chars in
+        text
 
 rndPerm : Vect n a -> Eff (Vect n a) [RND]
 rndPerm {n=n} vs = do
@@ -41,24 +49,10 @@ showGrid nodes cellfn =
         joinStrings $ map (\i => cellfn i j) nodes
     ) nodes
 
-mazeEdges : List Int ->
+mazeEdges : List (Int, Int) ->
     Eff (List ((Int, Int), (Int, Int))) [RND, SYSTEM]
-mazeEdges nodes = do
---    srand !time
-    let graph: List ((Int, Int), (Int, Int)) = do
-        i <- nodes
-        j <- nodes
-        k <- [((i, j), (i + 1, j)), ((i, j), (i, j + 1))]
-        pure k
-    rgraph <- shuffle graph
---    pure []
---    pure rgraph
-    pure $ spanningForest rgraph
-
-mazeEdges2 : List (Int, Int) ->
-    Eff (List ((Int, Int), (Int, Int))) [RND, SYSTEM]
-mazeEdges2 nodePairs = do
---    srand !time
+mazeEdges nodePairs = do
+    srand !time
     let graph: List ((Int, Int), (Int, Int)) = do
         (i, ip) <- nodePairs
         (j, jp) <- nodePairs
@@ -75,8 +69,7 @@ effectMaze = do
     let nodes: List Int = [0..(order-2)]
     let nodePairs: List (Int, Int) = map ( \i => (i, i + 1)) nodes
     let nodesPlus: List Int = [0..(order-1)]
-    edges <- mazeEdges2 nodePairs
---    edges <- mazeEdges nodes
+    edges <- mazeEdges nodePairs
     putStrLn $ show edges
     let cellPair: (Int -> Int -> String) = \i, j =>
         "<" ++ (show i) ++ "," ++ (show j) ++ ">"
@@ -90,16 +83,24 @@ effectMaze = do
         (if (hFlag i j) then "T" else "F") ++
         (if (vFlag i j) then "T" else "F")
     showGrid nodesPlus cellFlags
+    let bobbin : String =
+        let text : (List Char) = [ 'b', 'o' ] in
+            pack text
     let cellQSquare: (Int -> Int -> String) = \i, j =>
-        case (hFlag i j, vFlag i j) of
-            (False, False) => "▛"
-            (True, False) => "▀"
-            (False, True) => "▌"
-            (True, True) => "▘"
---            (False, False) => "█"
---            (True, False) => "▙"
---            (False, True) => "▜"
---            (True, True) => "▚"
+        let hEnd = (i == order - 1)
+            vEnd = (j == order - 1) in
+            if (hEnd && vEnd) then
+                squareChar True False False False
+            else if hEnd then
+                squareChar True False True False
+            else if vEnd then
+                squareChar True True False False
+            else
+                squareChar
+                    True
+                    (not (vFlag i j))
+                    (not (hFlag i j))
+                    False
     showGrid nodesPlus cellQSquare
     pure ()
 
