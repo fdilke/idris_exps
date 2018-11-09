@@ -50,14 +50,17 @@ showGrid nodes cellfn =
     ) nodes
 
 mazeEdges : List (Int, Int) ->
-    Eff (List ((Int, Int), (Int, Int))) [RND, SYSTEM]
+    Eff (List ((Int, Int), (Int, Int))) [RND, STDIO, SYSTEM]
 mazeEdges nodePairs = do
-    srand !time
-    let graph: List ((Int, Int), (Int, Int)) = do
+--    srand !time
+    let graph: List ((Int, Int), (Int, Int)) = nub $ do
         (i, ip) <- nodePairs
         (j, jp) <- nodePairs
         k <- [((i, j), (ip, j)), ((i, j), (i, jp)), ((ip, j), (ip, jp)), ((i, jp), (ip, jp))]
         pure k
+    putStrLn "nubbed graph pre-shuffle:"
+    putStrLn $ show graph
+    putStrLn "nubbed graph pre-shuffle: (end)"
     rgraph <- shuffle graph
     pure $ spanningForest rgraph
 
@@ -83,9 +86,9 @@ effectMaze = do
         (if (hFlag i j) then "T" else "F") ++
         (if (vFlag i j) then "T" else "F")
     showGrid nodesPlus cellFlags
-    let bobbin : String =
-        let text : (List Char) = [ 'b', 'o' ] in
-            pack text
+--    let bobbin : String =
+--        let text : (List Char) = [ 'b', 'o' ] in
+--            pack text
     let cellQSquare: (Int -> Int -> String) = \i, j =>
         let hEnd = (i == order - 1)
             vEnd = (j == order - 1) in
