@@ -41,3 +41,13 @@ What happens at run time?
 
 How are functions declared infix, e.g. +, -, <?
 How can you tell what types e.g. 3 can be cast to?
+
+
+----------- found a 3 x 3 acrostic
+
+A C E
+
+D O G
+
+D O O
+
