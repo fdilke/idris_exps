@@ -31,16 +31,11 @@ rndFact (S n) = do
     prevFact <- (rndFact n)
     let n1 = toIntegerNat $ S n
     shift <- rndInt 0 n1
---    putStrLn $ "shift: " ++ (show shift) ++ " from: " ++ (show n1)
     pure $ n1 * prevFact + shift
 
 rndPerm : Vect n a -> Eff (Vect n a) [RND]
 rndPerm {n=n} vs = do
---    putStrLn $ "VVV factorial of: " ++ (show n) ++ " : " ++ (show fact)
---    let fact = factorial n
---    code <- rndInt 0 fact
     code <- rndFact n
---    putStrLn $ "VVV code:  " ++ (show code)
     let perm = godelPerm n code
     let shuffled = map (\i => index i vs) perm
     pure shuffled
@@ -63,7 +58,7 @@ showGrid nodes cellfn =
     ) nodes
 
 mazeEdges : List (Int, Int) ->
-    Eff (List ((Int, Int), (Int, Int))) [RND, STDIO, SYSTEM]
+    Eff (List ((Int, Int), (Int, Int))) [RND, SYSTEM]
 mazeEdges nodePairs = do
     srand !time
     let graph: List ((Int, Int), (Int, Int)) = nub $ do
@@ -71,13 +66,8 @@ mazeEdges nodePairs = do
         (j, jp) <- nodePairs
         k <- [((i, j), (ip, j)), ((i, j), (i, jp)), ((ip, j), (ip, jp)), ((i, jp), (ip, jp))]
         pure k
---    putStrLn "nubbed graph pre-shuffle:"
---    putStrLn $ show graph
---    putStrLn "nubbed graph pre-shuffle: (end)"
     rgraph <- shuffle graph
     let forest = spanningForest rgraph
---    putStrLn $ "Greph = " ++ (show graph)
---    putStrLn $ "Forest = " ++ (show forest)
     pure $ forest
 
 effectMaze : Eff () [RND, STDIO, SYSTEM]
@@ -90,8 +80,6 @@ effectMaze = do
     let nodePairs: List (Int, Int) = map ( \i => (i, i + 1)) nodes
     let nodesPlus: List Int = [0..order]
     edges <- mazeEdges nodePairs
-    shuffled <- shuffle [1..100]
---    putStrLn $ ("shuffled: " ++ (show shuffled))
 --    putStrLn $ "Edges: " ++ ( show edges )
     let cellPair: (Int -> Int -> String) = \i, j =>
         "<" ++ (show i) ++ "," ++ (show j) ++ ">"

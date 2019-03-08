@@ -67,8 +67,10 @@ The "the" function is your friend:
         let text : (List Char) = [ 'b', 'o' ] in
             pack text
 
-▛X▀X▌
-XXXXX
-▛X▌X▌
-XXXXX
-▀X▀X▘    
+-- How I finally fixed the maze
+
+- found bug in Effects.Random.rndInt, did workaroud - *rndFact* method
+
+- identified minimal failure case, analyzed output graph, identified display bug
+
+    
