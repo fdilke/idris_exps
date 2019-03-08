@@ -65,7 +65,7 @@ showGrid nodes cellfn =
 mazeEdges : List (Int, Int) ->
     Eff (List ((Int, Int), (Int, Int))) [RND, STDIO, SYSTEM]
 mazeEdges nodePairs = do
---    srand !time
+    srand !time
     let graph: List ((Int, Int), (Int, Int)) = nub $ do
         (i, ip) <- nodePairs
         (j, jp) <- nodePairs
@@ -75,7 +75,10 @@ mazeEdges nodePairs = do
 --    putStrLn $ show graph
 --    putStrLn "nubbed graph pre-shuffle: (end)"
     rgraph <- shuffle graph
-    pure $ spanningForest rgraph
+    let forest = spanningForest rgraph
+--    putStrLn $ "Greph = " ++ (show graph)
+--    putStrLn $ "Forest = " ++ (show forest)
+    pure $ forest
 
 effectMaze : Eff () [RND, STDIO, SYSTEM]
 effectMaze = do
@@ -85,7 +88,7 @@ effectMaze = do
     let order = fromMaybe defaultOrder optionalOrder
     let nodes: List Int = [0..(order-2)]
     let nodePairs: List (Int, Int) = map ( \i => (i, i + 1)) nodes
-    let nodesPlus: List Int = [0..(order-1)]
+    let nodesPlus: List Int = [0..order]
     edges <- mazeEdges nodePairs
     shuffled <- shuffle [1..100]
 --    putStrLn $ ("shuffled: " ++ (show shuffled))
@@ -105,8 +108,8 @@ effectMaze = do
 --    putStrLn "Grid: (not)"
 --    showGrid nodesPlus cellFlags
     let cellQSquare: (Int -> Int -> String) = \i, j =>
-        let hEnd = (i == order - 1)
-            vEnd = (j == order - 1) in
+        let hEnd = (i == order)
+            vEnd = (j == order) in
             if (hEnd && vEnd) then
                 squareChar True False False False
             else if hEnd then

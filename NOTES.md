@@ -66,4 +66,9 @@ The "the" function is your friend:
     let bobbin : String =
         let text : (List Char) = [ 'b', 'o' ] in
             pack text
-    
+
+▛X▀X▌
+XXXXX
+▛X▌X▌
+XXXXX
+▀X▀X▘    
