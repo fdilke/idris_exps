@@ -67,12 +67,15 @@ mazeEdges nodePairs = do
 effectMaze : Eff () [RND, STDIO, SYSTEM]
 effectMaze = do
     args <- getArgs
+    let defaultOrder : Int = 3
     let optionalOrder = index' 1 args >>= (parseInteger { a=Int })
-    let order = fromMaybe 3 optionalOrder
+    let order = fromMaybe defaultOrder optionalOrder
     let nodes: List Int = [0..(order-2)]
     let nodePairs: List (Int, Int) = map ( \i => (i, i + 1)) nodes
     let nodesPlus: List Int = [0..(order-1)]
     edges <- mazeEdges nodePairs
+    shuffled <- shuffle [1..100]
+    putStrLn $ ("shuffled: " ++ (show shuffled))
     putStrLn $ show edges
     let cellPair: (Int -> Int -> String) = \i, j =>
         "<" ++ (show i) ++ "," ++ (show j) ++ ">"

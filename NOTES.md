@@ -51,3 +51,9 @@ D O G
 
 D O O
 
+-------------- making conversions
+
+The "the" function is your friend:
+
+    map S (the (List Nat) [1,2,3])
+

@@ -31,6 +31,6 @@ godelPermTests =
                 ]
         describe "factorials" $ do
             it "work as described" $ do
-                let expected : Vect 3 Integer = [1, 1, 5040]
-                factorial <$> [0, 1, 7] `shouldBe` expected
+                let expected : Vect _ Integer = [1, 1, 2, 6, 5040]
+                factorial <$> [0, 1, 2, 3, 7] `shouldBe` expected
 
