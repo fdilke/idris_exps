@@ -57,3 +57,13 @@ The "the" function is your friend:
 
     map S (the (List Nat) [1,2,3])
 
+---- handy for debugging code that uses random numbers
+
+    for i in $(seq 40) ; do ./idris_exps 1 ; sleep $[ ( $RANDOM % 10 )  + 1 ]s ; done
+    
+-- Strings vs lists of characters
+
+    let bobbin : String =
+        let text : (List Char) = [ 'b', 'o' ] in
+            pack text
+    

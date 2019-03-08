@@ -3,6 +3,7 @@ module Main
 import Lib
 import MoreStuff.Acrostic
 import MoreStuff.Maze
+import MoreStuff.ShowBadRndInt
 
 {-
 main : IO ()
@@ -45,5 +46,6 @@ main = do
 
 main : IO ()
 main = doMaze
+-- main = doShowBadRndInt
 -- doAcrostics
 

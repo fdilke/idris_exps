@@ -25,9 +25,22 @@ squareChar nw ne sw se =
         text: String = pack chars in
         text
 
+rndFact : Nat -> Eff Integer [RND]
+rndFact Z = pure 0
+rndFact (S n) = do
+    prevFact <- (rndFact n)
+    let n1 = toIntegerNat $ S n
+    shift <- rndInt 0 n1
+--    putStrLn $ "shift: " ++ (show shift) ++ " from: " ++ (show n1)
+    pure $ n1 * prevFact + shift
+
 rndPerm : Vect n a -> Eff (Vect n a) [RND]
 rndPerm {n=n} vs = do
-    code <- rndInt 0 (factorial n)
+--    putStrLn $ "VVV factorial of: " ++ (show n) ++ " : " ++ (show fact)
+--    let fact = factorial n
+--    code <- rndInt 0 fact
+    code <- rndFact n
+--    putStrLn $ "VVV code:  " ++ (show code)
     let perm = godelPerm n code
     let shuffled = map (\i => index i vs) perm
     pure shuffled
@@ -58,9 +71,9 @@ mazeEdges nodePairs = do
         (j, jp) <- nodePairs
         k <- [((i, j), (ip, j)), ((i, j), (i, jp)), ((ip, j), (ip, jp)), ((i, jp), (ip, jp))]
         pure k
-    putStrLn "nubbed graph pre-shuffle:"
-    putStrLn $ show graph
-    putStrLn "nubbed graph pre-shuffle: (end)"
+--    putStrLn "nubbed graph pre-shuffle:"
+--    putStrLn $ show graph
+--    putStrLn "nubbed graph pre-shuffle: (end)"
     rgraph <- shuffle graph
     pure $ spanningForest rgraph
 
@@ -75,11 +88,12 @@ effectMaze = do
     let nodesPlus: List Int = [0..(order-1)]
     edges <- mazeEdges nodePairs
     shuffled <- shuffle [1..100]
-    putStrLn $ ("shuffled: " ++ (show shuffled))
-    putStrLn $ show edges
+--    putStrLn $ ("shuffled: " ++ (show shuffled))
+--    putStrLn $ "Edges: " ++ ( show edges )
     let cellPair: (Int -> Int -> String) = \i, j =>
         "<" ++ (show i) ++ "," ++ (show j) ++ ">"
-    showGrid nodesPlus cellPair
+--    putStrLn "Grid: (cell squares)"
+--    showGrid nodesPlus cellPair
     let hFlag = \i : Int, j : Int =>
         elem ((i - 1, j), (i, j)) edges
     let vFlag = \i : Int, j : Int =>
@@ -88,10 +102,8 @@ effectMaze = do
         " " ++
         (if (hFlag i j) then "T" else "F") ++
         (if (vFlag i j) then "T" else "F")
-    showGrid nodesPlus cellFlags
---    let bobbin : String =
---        let text : (List Char) = [ 'b', 'o' ] in
---            pack text
+--    putStrLn "Grid: (not)"
+--    showGrid nodesPlus cellFlags
     let cellQSquare: (Int -> Int -> String) = \i, j =>
         let hEnd = (i == order - 1)
             vEnd = (j == order - 1) in
@@ -107,6 +119,7 @@ effectMaze = do
                     (not (vFlag i j))
                     (not (hFlag i j))
                     False
+--    putStrLn "QSquare:"
     showGrid nodesPlus cellQSquare
     pure ()
 
