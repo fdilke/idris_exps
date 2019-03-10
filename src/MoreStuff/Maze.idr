@@ -50,20 +50,21 @@ joinStrings = pack . concat . (map unpack)
 
 showGrid:
     (List Int) ->
+    (List Int) ->
     (Int -> Int -> String) ->
     Eff () [STDIO]
-showGrid nodes cellfn =
+showGrid horzNodes vertNodes cellfn =
     putStr $ unlines $ map (\j =>
-        joinStrings $ map (\i => cellfn i j) nodes
-    ) nodes
+        joinStrings $ map (\i => cellfn i j) horzNodes
+    ) vertNodes
 
-mazeEdges : List (Int, Int) ->
+mazeEdges : List (Int, Int) -> List (Int, Int) ->
     Eff (List ((Int, Int), (Int, Int))) [RND, SYSTEM]
-mazeEdges nodePairs = do
+mazeEdges horzPairs vertPairs = do
     srand !time
     let graph: List ((Int, Int), (Int, Int)) = nub $ do
-        (i, ip) <- nodePairs
-        (j, jp) <- nodePairs
+        (i, ip) <- horzPairs
+        (j, jp) <- vertPairs
         k <- [((i, j), (ip, j)), ((i, j), (i, jp)), ((ip, j), (ip, jp)), ((i, jp), (ip, jp))]
         pure k
     rgraph <- shuffle graph
@@ -73,13 +74,17 @@ mazeEdges nodePairs = do
 effectMaze : Eff () [RND, STDIO, SYSTEM]
 effectMaze = do
     args <- getArgs
-    let defaultOrder : Int = 3
-    let optionalOrder = index' 1 args >>= (parseInteger { a=Int })
-    let order = fromMaybe defaultOrder optionalOrder
-    let nodes: List Int = [0..(order-2)]
-    let nodePairs: List (Int, Int) = map ( \i => (i, i + 1)) nodes
-    let nodesPlus: List Int = [0..order]
-    edges <- mazeEdges nodePairs
+    let defaultWidth : Int = 5
+    let optionalWidth = index' 1 args >>= (parseInteger { a=Int })
+    let width = fromMaybe defaultWidth optionalWidth
+    let defaultHeight : Int = width
+    let optionalHeight = index' 2 args >>= (parseInteger { a=Int })
+    let height = fromMaybe defaultHeight optionalHeight
+    let horzPairs: List (Int, Int) = map ( \i => (i, i + 1)) [0..(width-2)]
+    let vertPairs: List (Int, Int) = map ( \i => (i, i + 1)) [0..(height-2)]
+    let horzNodes: List Int = [0..width]
+    let vertNodes: List Int = [0..height]
+    edges <- mazeEdges horzPairs vertPairs
 --    putStrLn $ "Edges: " ++ ( show edges )
     let cellPair: (Int -> Int -> String) = \i, j =>
         "<" ++ (show i) ++ "," ++ (show j) ++ ">"
@@ -96,8 +101,8 @@ effectMaze = do
 --    putStrLn "Grid: (not)"
 --    showGrid nodesPlus cellFlags
     let cellQSquare: (Int -> Int -> String) = \i, j =>
-        let hEnd = (i == order)
-            vEnd = (j == order) in
+        let hEnd = (i == width)
+            vEnd = (j == height) in
             if (hEnd && vEnd) then
                 squareChar True False False False
             else if hEnd then
@@ -111,7 +116,7 @@ effectMaze = do
                     (not (hFlag i j))
                     False
 --    putStrLn "QSquare:"
-    showGrid nodesPlus cellQSquare
+    showGrid horzNodes vertNodes cellQSquare
     pure ()
 
 export
