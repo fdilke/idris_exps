@@ -25,25 +25,14 @@ squareChar nw ne sw se =
         text: String = pack chars in
         text
 
-rndFact : Nat -> Eff Integer [RND]
-rndFact Z = pure 0
-rndFact (S n) = do
-    prevFact <- (rndFact n)
-    let n1 = toIntegerNat $ S n
-    shift <- rndInt 0 n1
-    pure $ n1 * prevFact + shift
-
-rndPerm : Vect n a -> Eff (Vect n a) [RND]
-rndPerm {n=n} vs = do
-    code <- rndFact n
-    let perm = godelPerm n code
-    let shuffled = map (\i => index i vs) perm
-    pure shuffled
-
 shuffle : List a -> Eff (List a) [RND]
-shuffle xs = do
-    vs <- rndPerm (fromList xs)
-    pure $ toList vs
+shuffle [] = pure []
+shuffle [x] = pure [x]
+shuffle (x::xs) = do
+    shorter <- shuffle xs
+    pos <- rndFin $ length xs
+    let (left, right) = splitAt (toNat pos) shorter
+    pure $ left ++ [x] ++ right
 
 joinStrings: List String -> String
 joinStrings = pack . concat . (map unpack)
