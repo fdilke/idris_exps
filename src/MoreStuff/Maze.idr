@@ -59,7 +59,7 @@ showGrid horzNodes vertNodes cellfn =
     ) vertNodes
 
 mazeEdges : List (Int, Int) -> List (Int, Int) ->
-    Eff (List ((Int, Int), (Int, Int))) [RND, SYSTEM]
+    Eff (List ((Int, Int), (Int, Int))) [RND, SYSTEM, STDIO]
 mazeEdges horzPairs vertPairs = do
     srand !time
     let graph: List ((Int, Int), (Int, Int)) = nub $ do
@@ -67,29 +67,35 @@ mazeEdges horzPairs vertPairs = do
         (j, jp) <- vertPairs
         k <- [((i, j), (ip, j)), ((i, j), (i, jp)), ((ip, j), (ip, jp)), ((i, jp), (ip, jp))]
         pure k
+--    putStrLn "Shuffling graph..."
     rgraph <- shuffle graph
+--    putStrLn "Calc spanning forest..."
     let forest = spanningForest rgraph
-    pure $ forest
+--    putStrLn "Calc spanning forest... done"
+    pure forest
+
+getArg : Nat -> Int -> Eff Int [SYSTEM]
+getArg argNum defaultValue = do
+    args <- getArgs
+    let optionalArg : Maybe String = index' argNum args
+    let optionalValue : Maybe Int = optionalArg >>= (parseInteger { a=Int })
+    pure $ fromMaybe defaultValue optionalValue
 
 effectMaze : Eff () [RND, STDIO, SYSTEM]
 effectMaze = do
-    args <- getArgs
     let defaultWidth : Int = 5
-    let optionalWidth = index' 1 args >>= (parseInteger { a=Int })
-    let width = fromMaybe defaultWidth optionalWidth
+    width <- getArg 1 defaultWidth
     let defaultHeight : Int = width
-    let optionalHeight = index' 2 args >>= (parseInteger { a=Int })
-    let height = fromMaybe defaultHeight optionalHeight
+    height <- getArg 2 defaultHeight
     let horzPairs: List (Int, Int) = map ( \i => (i, i + 1)) [0..(width-2)]
     let vertPairs: List (Int, Int) = map ( \i => (i, i + 1)) [0..(height-2)]
     let horzNodes: List Int = [0..width]
     let vertNodes: List Int = [0..height]
     edges <- mazeEdges horzPairs vertPairs
---    putStrLn $ "Edges: " ++ ( show edges )
     let cellPair: (Int -> Int -> String) = \i, j =>
         "<" ++ (show i) ++ "," ++ (show j) ++ ">"
 --    putStrLn "Grid: (cell squares)"
---    showGrid nodesPlus cellPair
+--    showGrid horzNodes vertNodes cellPair
     let hFlag = \i : Int, j : Int =>
         elem ((i - 1, j), (i, j)) edges
     let vFlag = \i : Int, j : Int =>
@@ -99,7 +105,7 @@ effectMaze = do
         (if (hFlag i j) then "T" else "F") ++
         (if (vFlag i j) then "T" else "F")
 --    putStrLn "Grid: (not)"
---    showGrid nodesPlus cellFlags
+--    showGrid horzNodes vertNodes cellFlags
     let cellQSquare: (Int -> Int -> String) = \i, j =>
         let hEnd = (i == width)
             vEnd = (j == height) in
