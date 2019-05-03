@@ -24,6 +24,9 @@ install:
 
 rebuild: clean build
 
+maze:
+	@ ${idris} --ibcsubdir ${target} --build maze.ipkg
+
 test:
 	@ ${idris} --ibcsubdir ${target} --testpkg ${pkg}.ipkg
 

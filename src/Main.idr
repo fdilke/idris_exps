@@ -2,7 +2,6 @@ module Main
 
 import Lib
 import MoreStuff.Acrostic
-import MoreStuff.Maze
 import MoreStuff.ShowBadRndInt
 
 {-
@@ -45,7 +44,7 @@ main = do
 -}
 
 main : IO ()
-main = doMaze
+main = putStr "Somebody define an app here"
 -- main = doShowBadRndInt
 -- doAcrostics
 
