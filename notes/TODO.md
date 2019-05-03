@@ -20,3 +20,6 @@ TSP art
 Multiscale Truchet
 understand { [SDL_ON] => [SDL ()] } Eff ()
 logic programming (Laver tables, shelves)
+this points the way to using paramorphisms to memoize functions in Idris:
+    https://github.com/vmchale/recursion_schemes
+    The Test.Spec shows how to build a deduplicator using a para algebra
