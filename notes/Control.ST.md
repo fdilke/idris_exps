@@ -97,6 +97,13 @@ a sequence of actions manipulating state, where:
 - in_res the list of resources available BEFORE
 - out-res the list of resources available AFTER - may depend on result
 
+Here *Resources* is an abstract representation of the state of the world -
+definition of type to follow.
+
+in_res, out_res can be regarded as pre / post -conditions.
+
+ST: a type level function which lets us precisely describe the
+state transitions of a stateful function.
            
 
             
