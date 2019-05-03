@@ -87,7 +87,17 @@ which tracks how these resources change when a function runs:
             (out_res : resultType -> Resources) ->
             Type
             
-I'm sure this was arrived at after long and hard thought.            
+I'm sure this was arrived at after long and hard thought.  
+
+Then an *STrans m resultType in_res out_res fn* represents:
+a sequence of actions manipulating state, where:
+
+- m is an underlying computation context (typically, a monad)
+- resultType the type of value the sequence will produce
+- in_res the list of resources available BEFORE
+- out-res the list of resources available AFTER - may depend on result
+
+           
 
             
  
