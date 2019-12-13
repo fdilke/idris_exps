@@ -105,6 +105,15 @@ in_res, out_res can be regarded as pre / post -conditions.
 ST: a type level function which lets us precisely describe the
 state transitions of a stateful function.
            
+e.g. to define an ;increment' function which adds 1 to the int-valued x resource :
 
+    increment: (x : Var) -> STrans m () [x ::: State Integer] (const [x ::: State Integer])
+    increment x = do 
+        num <- read x
+        write x (num + 1)
+        
+example of another function, makeAndIncrement which uses new / increment / delete
+to create a temporary variable, increment and delete it. Presumably the type checker
+makes sure we net don't change any resources as the signature declares.        
             
  
