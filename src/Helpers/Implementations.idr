@@ -9,8 +9,8 @@ import Data.SortedMap
 Show (Fin len) where
     show = show . finToNat
 
-(Show k, Show v) => Show (SortedMap k v) where
-    show = show . toList
+--(Show k, Show v) => Show (SortedMap k v) where
+--    show = show . toList
 
 (Eq k, Eq v) => Eq (SortedMap k v) where
     (==) xs ys = (toList xs) == (toList ys)
