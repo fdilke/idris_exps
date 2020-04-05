@@ -1,0 +1,17 @@
+package app
+
+sourcedir = src
+
+modules = Lib
+	, MoreStuff.OtherLib
+	, SpecTests.SpecIOTests
+	, SpecTests.CollatzTests
+
+tests = SpecTests.SpecIOTests.specIOTests
+
+opts = "-p specdris -p effects -p contrib"
+
+executable = maze
+
+main = Mains.Maze
+

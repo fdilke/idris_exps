@@ -1,4 +1,4 @@
-module MoreStuff.Maze
+module Main
 
 import Effects
 import Effect.State
@@ -114,9 +114,8 @@ effectMaze = do
     showGrid horzNodes vertNodes cellQSquare
     pure ()
 
-export
-doMaze : IO ()
-doMaze = do run effectMaze
+main : IO ()
+main = do run effectMaze
 
 --- experiments with monadic effects:
 --    let k: List (Eff () [STDIO]) = map putStrLn ["Ho", "ho"]

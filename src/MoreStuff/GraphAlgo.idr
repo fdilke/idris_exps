@@ -69,7 +69,7 @@ parameters (dset: SortedMap a a)
         (Just xx, Nothing) => (False, insert y xx dset)
         (Nothing, Just yy) => (False, insert x yy dset)
 
-||| Find a spanning forest of a set of edges using Kruskal's algorithm'
+||| Find a spanning forest of a set of edges using Kruskal's algorithm
 export
 spanningForest: Ord a => List (a, a) -> List (a, a)
 spanningForest edges =
